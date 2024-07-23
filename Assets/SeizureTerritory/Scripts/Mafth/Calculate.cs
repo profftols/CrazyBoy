@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Calculate
 {
-    private static int _multiplierSquare = 4;
+    private static int _multiplierSquare = 2;
     private static float _multiplier = 0.5f;
 
     public static int GetSquareArea(Vector3 minPoint, Vector3 maxPoint)
@@ -41,5 +41,5 @@ public static class Calculate
         return maxPoint;
     }
 
-    public static Vector3 FindCenter(Vector3 minPoint, Vector3 maxPoint) => (minPoint - maxPoint) * _multiplier;
+    public static Vector3 FindCenter(Vector3 minPoint, Vector3 maxPoint) => (minPoint + maxPoint) * _multiplier;
 }

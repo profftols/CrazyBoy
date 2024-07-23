@@ -14,9 +14,9 @@ public class BotAI : Character
         _renderMaterial = GetComponent<Renderer>();
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        //DropMoney.Invoke();
+        Debug.Log("Ты умир");
     }
 
     public void SetMaterial(Material material) => _renderMaterial.material = material;

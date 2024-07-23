@@ -7,28 +7,30 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(MeshRenderer))]
 public class Land : MonoBehaviour
 {
-    public Renderer TextureRender{ get; private set; }
-    public Renderer DefaultRender { get; private set; }
+    public Color RenderColor { get; private set; }
+    
+    private Renderer _texture;
     private Map _map;
 
     private void Start()
     {
-        DefaultRender = GetComponent<Renderer>();
+        _texture = GetComponent<Renderer>();
         _map = GetComponentInParent<Map>();
-        TextureRender = DefaultRender;
     }
 
-    public void SetMaterial(Material material) => TextureRender.material = material;
-    
-    public bool IsValidColor(Color color)
+    public void SetMaterial(Material material)
     {
-        if (TextureRender.material.color == color || DefaultRender.material.color == color)
+        _texture.material = material;
+        RenderColor = material.color;
+    }
+
+    public bool IsNotValidColor(Color color)
+    {
+        if (_texture.material.color == color)
         {
-            return true;
+            return false;
         }
-        else
-        {
-            return false; //если этот ретерн то реализовать смерть
-        }
+        
+        return true;
     }
 }

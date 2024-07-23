@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Map : MonoBehaviour
@@ -10,6 +11,7 @@ public class Map : MonoBehaviour
     [SerializeField] private int _sizeY;
 
     private Land[,] _lands;
+    private Material _defaultLand;
 
     private void Awake()
     {
@@ -27,67 +29,65 @@ public class Map : MonoBehaviour
         }
     }
 
-    public bool TakeLand(Vector3 minPosition, Vector3 maxPosition, Renderer renderer, out Land land)
+    public void SetDefaultMaterial(Land land)
     {
-        //принимает координаты которые не закрашенные из буфера
-        //Написать циклы которые бы проходили в диапазоне от макс до миним
-        //Проверять закрашен в наш цвет или нет
+        land.SetMaterial(_defaultLand);
+    }
 
-        for (int x = (int)minPosition.x; x < (int)maxPosition.x; x++)
+    public List<Land> TakeLands(ref List<Land> lands, Color color, Vector3 start)
+    {
+        lands.Add(_lands[(int)start.x, (int)start.z]);
+        
+        Vector3Int[] directions = new Vector3Int[]
         {
-            for (int y = (int)minPosition.z; y < (int)maxPosition.z; y++)
+            new(1, 0, 0),
+            new(-1, 0, 0),
+            new(0, 0, 1),
+            new(0, 0, -1)
+        };
+
+        for (int i = 0; i < lands.Count; i++)
+        {
+            Vector3Int position = new Vector3Int((int)lands[i].transform.position.x, (int)lands[i].transform.position.y,
+                (int)lands[i].transform.position.z);
+
+            foreach (var direction in directions)
             {
-                if (_lands[x, y].TextureRender.material.color != renderer.material.color)
+                Vector3Int newPosition = position + direction;
+                
+                if (TryGetLand(color, newPosition.x, newPosition.z, out Land newLand))
                 {
-                    land = _lands[x, y];
-                    return true;
+                    CheckLand(ref lands, newLand);
                 }
             }
+        }
+
+        return lands;
+    }
+
+    private bool TryGetLand(Color color, int x, int z, out Land land)
+    {
+        if (x >= _sizeX || z >= _sizeY)
+        {
+            land = null;
+            return false;
+        }
+
+        if (_lands[x, z].RenderColor != color)
+        {
+            land = _lands[x, z];
+            return true;
         }
 
         land = null;
         return false;
     }
 
-    public List<Land> TakeLands(Vector3 start, Vector3 end, bool isStepY)
+    private void CheckLand(ref List<Land> lands, Land land)
     {
-        List<Land> lands = new();
-
-        if (isStepY)
+        if (lands.Contains(land) == false)
         {
-            if ((int)start.z < (int)end.z)
-            {
-                for (int y = (int)start.z; y < (int)end.z; y++)
-                {
-                    lands.Add(_lands[(int)start.x, y]);
-                }
-            }
-            else if ((int)start.z > (int)end.z)
-            {
-                for (int y = (int)start.z; y > (int)end.z; y--)
-                {
-                    lands.Add(_lands[(int)start.x, y]);
-                }
-            }
-
-            return lands;
+            lands.Add(land);
         }
-
-        if ((int)start.x < (int)end.x)
-        {
-            for (int x = (int)start.x; x < (int)end.x; x++)
-            {
-                lands.Add(_lands[x, (int)start.z]);
-            }
-        }
-        else if ((int)start.x > (int)end.x)
-        {
-            for (int x = (int)start.x; x > (int)end.x; x--)
-            {
-                lands.Add(_lands[x, (int)start.z]);
-            }
-        }
-
-        return lands;
     }
 }

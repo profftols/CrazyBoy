@@ -13,6 +13,7 @@ public class ColoringPlayer
 
     private float _radius = 3f;
     private float _distance = 1f;
+    private int _minNumberFields = 5;
 
     public ColoringPlayer(Renderer renderer, Map map)
     {
@@ -39,80 +40,5 @@ public class ColoringPlayer
         }
     }
 
-    public bool ChangeLandMaterial(Land land)
-    {
-        if (_lands.Contains(land) == false)
-        {
-            land.SetMaterial(_renderer.material);
-        }
-        else
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    public void AddBufferLand(Land land)
-    {
-        _bufferLands.Add(land);
-    }
-
-    public bool IsConquerLands() => _bufferLands != null && _bufferLands.Count >= 1;
-
-    public void ConquerLand()
-    {
-        PaintInside();
-        
-        _lands.AddRange(_bufferLands);
-        _bufferLands.Clear();
-    }
-
-    private bool IsColorCorrect() // Метод который проверяет захваченные цвета все совпадают если нет то смерть
-    {
-        foreach (var land in _bufferLands)
-        {
-            if (land.IsValidColor(_renderer.material.color))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private void PaintInside()
-    {
-        
-        Vector3[] positions = new Vector3[_bufferLands.Count];
-        ///*
-        List<Land> lands = new();
-
-
-        for (int i = 0; i < _bufferLands.Count; i++)
-        {
-            positions[i] = _bufferLands[i].transform.position;
-        }
-
-        for (int start = 0; start < positions.Length; start++)
-        {
-            for (int end = positions.Length-1; end > 0; end--)
-            {
-                if ((int)positions[start].x == (int)positions[end].x)
-                {
-                    lands.AddRange(_map.TakeLands(positions[start], positions[end], true));
-                }
-
-                if ((int)positions[start].z == (int)positions[end].z)
-                {
-                    lands.AddRange(_map.TakeLands(positions[start], positions[end], false));
-                }
-            }
-        }
-
-        foreach (var variaLand in lands)
-        {
-            variaLand.SetMaterial(_renderer.material);
-        }
-    }
+    
 }

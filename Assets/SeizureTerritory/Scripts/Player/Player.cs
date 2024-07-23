@@ -20,8 +20,8 @@ public class Player : Character
         _movement.Move();
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        //GameOver.Invoke();
+        Debug.Log("Ты умир игрок");
     }
 }
