@@ -13,7 +13,6 @@ public class ColoringPlayer
 
     private float _radius = 3f;
     private float _distance = 1f;
-    private int _minNumberFields = 5;
 
     public ColoringPlayer(Renderer renderer, Map map)
     {
