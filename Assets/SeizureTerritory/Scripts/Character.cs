@@ -37,7 +37,7 @@ public class Character : MonoBehaviour
             }
         }
     }
-
+    
     protected void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out Land land))
