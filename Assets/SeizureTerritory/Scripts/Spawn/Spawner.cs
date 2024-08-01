@@ -7,6 +7,7 @@ using Random = System.Random;
 
 public class Spawner : MonoBehaviour
 {
+    [SerializeField] private CameraFollow _camera;
     [SerializeField] private Transform _path;
     [SerializeField] private Map _map;
     [SerializeField] private Character[] _players;
@@ -33,6 +34,10 @@ public class Spawner : MonoBehaviour
             if (character is BotAI)
             {
                 InstallColor(character as BotAI);
+            }
+            else
+            {
+                _camera.SetTarget(character.transform);
             }
             
             character.SetMap(_map);

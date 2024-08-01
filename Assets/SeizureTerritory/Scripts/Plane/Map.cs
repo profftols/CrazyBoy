@@ -10,8 +10,8 @@ public class Map : MonoBehaviour
     [SerializeField] private int _sizeX;
     [SerializeField] private int _sizeY;
 
+    private Renderer _defaultLand;
     private Land[,] _lands;
-    private Material _defaultLand;
 
     private void Awake()
     {
@@ -27,16 +27,20 @@ public class Map : MonoBehaviour
                 land.transform.SetParent(gameObject.transform);
             }
         }
+        
+        _defaultLand = _lands[0, 0].GetComponent<Renderer>();
     }
 
     public void SetDefaultMaterial(Land land)
     {
-        land.SetMaterial(_defaultLand);
+        land.SetMaterial(_defaultLand.material);
     }
 
-    public List<Land> TakeLands(ref List<Land> lands, Color color, Vector3 start)
+    public List<Land> TakeLands(ref List<Land> lands, Material material, Vector3 start)
     {
         lands.Add(_lands[(int)start.x, (int)start.z]);
+
+        Debug.Log(lands.Count);
         
         Vector3Int[] directions = new Vector3Int[]
         {
@@ -55,7 +59,7 @@ public class Map : MonoBehaviour
             {
                 Vector3Int newPosition = position + direction;
                 
-                if (TryGetLand(color, newPosition.x, newPosition.z, out Land newLand))
+                if (TryGetLand(ref lands,material, (uint)newPosition.x, (uint)newPosition.z, out Land newLand))
                 {
                     CheckLand(ref lands, newLand);
                 }
@@ -65,20 +69,20 @@ public class Map : MonoBehaviour
         return lands;
     }
 
-    private bool TryGetLand(Color color, int x, int z, out Land land)
+    private bool TryGetLand(ref List<Land> lands, Material material, uint x, uint z, out Land land)
     {
         if (x >= _sizeX || z >= _sizeY)
         {
             land = null;
             return false;
         }
-
-        if (_lands[x, z].RenderColor != color)
+        
+        if (lands.Contains(_lands[x, z]) == false && material.color != _lands[x, z].Texture.material.color)
         {
             land = _lands[x, z];
             return true;
         }
-
+        
         land = null;
         return false;
     }

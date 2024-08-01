@@ -4,29 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(Renderer))]
 public class Land : MonoBehaviour
 {
-    public Color RenderColor { get; private set; }
-    
-    private Renderer _texture;
+    public Renderer Texture { get; private set; }
     private Map _map;
 
     private void Start()
     {
-        _texture = GetComponent<Renderer>();
+        Texture = GetComponent<Renderer>();
         _map = GetComponentInParent<Map>();
     }
 
     public void SetMaterial(Material material)
     {
-        _texture.material = material;
-        RenderColor = material.color;
+        Debug.Log("до изменения " + Texture.material.color);
+        Texture.material = material;
+        Texture.material.color = material.color;
+        Debug.Log("После " + Texture.material.color);
+        Debug.Log("Мой цвет "  + material.color);
     }
 
-    public bool IsNotValidColor(Color color)
+    public bool IsNotValidMaterial(Material material)
     {
-        if (_texture.material.color == color)
+        if (Texture.material.color == material.color)
         {
             return false;
         }

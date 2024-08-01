@@ -5,14 +5,14 @@ using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(Renderer))]
 public class Character : MonoBehaviour
 {
     protected List<Land> Lands;
     protected List<Land> Buffer;
 
     private Map _map;
-    private Renderer _coloring;
+    private Renderer _textureMaterial;
     private float _radius = 3f;
     private float _distance = 1f;
     private int _minNumberFields = 5;
@@ -21,7 +21,7 @@ public class Character : MonoBehaviour
     {
         Lands = new List<Land>();
         Buffer = new List<Land>();
-        _coloring = GetComponent<Renderer>();
+        _textureMaterial = GetComponent<Renderer>();
         
         Vector3 origin = transform.position;
         Vector3 direction = transform.forward;
@@ -32,7 +32,7 @@ public class Character : MonoBehaviour
         {
             if (hit.collider.gameObject.TryGetComponent(out Land land))
             {
-                land.SetMaterial(_coloring.material);
+                land.SetMaterial(_textureMaterial.material);
                 Lands.Add(land);
             }
         }
@@ -42,7 +42,7 @@ public class Character : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out Land land))
         {
-            if (ReferenceEquals(_coloring, null) == false)
+            if (ReferenceEquals(_textureMaterial, null) == false)
             {
                 if (ChangeLandMaterial(land))
                 {
@@ -65,7 +65,7 @@ public class Character : MonoBehaviour
     {
         if (Lands.Contains(land) == false)
         {
-            land.SetMaterial(_coloring.material);
+            land.SetMaterial(_textureMaterial.material);
         }
         else
         {
@@ -81,18 +81,18 @@ public class Character : MonoBehaviour
     {
         foreach (var land in Buffer)
         {
-            if (land.IsNotValidColor(_coloring.material.color))
+            if (land.IsNotValidMaterial(_textureMaterial.material))
             {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     private void PaintInside()
     {
-        if (IsColorNotCorrect() == false)
+        if (IsColorNotCorrect())
         {
             Die();
             return;
@@ -112,11 +112,12 @@ public class Character : MonoBehaviour
             var maxPoint = Calculate.FindMaxPoint(positions);
             var iteration = Calculate.GetSquareArea(minPoint, maxPoint);
             var centerPoint = Calculate.FindCenter(minPoint, maxPoint);
-            Buffer.AddRange(_map.TakeLands(ref lands, _coloring.material.color, centerPoint));
+            
+            Buffer.AddRange(_map.TakeLands(ref lands, _textureMaterial.material, centerPoint));
         
             foreach (var variaLand in lands)
             {
-                variaLand.SetMaterial(_coloring.material);
+                variaLand.SetMaterial(_textureMaterial.material);
             }
             
             positions = null;

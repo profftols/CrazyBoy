@@ -16,7 +16,7 @@ public class BotAI : Character
 
     private void OnDestroy()
     {
-        Debug.Log("Ты умир");
+        
     }
 
     public void SetMaterial(Material material) => _renderMaterial.material = material;
