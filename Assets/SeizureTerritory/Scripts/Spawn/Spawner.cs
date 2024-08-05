@@ -31,9 +31,9 @@ public class Spawner : MonoBehaviour
             int count = _random.Next(0, _points.Count - 1);
             var character = Instantiate(_players[i], _points[count].position, Quaternion.identity, null);
             
-            if (character is BotAI)
+            if (character is Bot)
             {
-                InstallColor(character as BotAI);
+                InstallColor(character as Bot);
             }
             else
             {
@@ -45,7 +45,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void InstallColor(BotAI bot)
+    private void InstallColor(Bot bot)
     {
         var material = _materials[_random.Next(0, _materials.Count - 1)];
         bot.SetMaterial(material);

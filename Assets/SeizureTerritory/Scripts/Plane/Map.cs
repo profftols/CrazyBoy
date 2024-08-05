@@ -36,11 +36,19 @@ public class Map : MonoBehaviour
         land.SetMaterial(_defaultLand.material);
     }
 
+    public Land TakeLand(int x, int z)
+    {
+        if (x >= _sizeX || z >= _sizeY)
+        {
+            return null;
+        }
+        
+        return _lands[x, z];
+    }
+
     public List<Land> TakeLands(ref List<Land> lands, Material material, Vector3 start)
     {
         lands.Add(_lands[(int)start.x, (int)start.z]);
-
-        Debug.Log(lands.Count);
         
         Vector3Int[] directions = new Vector3Int[]
         {

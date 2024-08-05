@@ -18,11 +18,8 @@ public class Land : MonoBehaviour
 
     public void SetMaterial(Material material)
     {
-        Debug.Log("до изменения " + Texture.material.color);
         Texture.material = material;
         Texture.material.color = material.color;
-        Debug.Log("После " + Texture.material.color);
-        Debug.Log("Мой цвет "  + material.color);
     }
 
     public bool IsNotValidMaterial(Material material)

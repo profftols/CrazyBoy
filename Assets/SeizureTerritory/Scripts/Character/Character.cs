@@ -1,69 +1,97 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[RequireComponent(typeof(Renderer))]
+[RequireComponent(typeof(Renderer), typeof(CharacterController))]
 public class Character : MonoBehaviour
 {
-    protected List<Land> Lands;
-    protected List<Land> Buffer;
+    private const float Speed = 5f;
+    public float _ds;
 
-    private Map _map;
-    private Renderer _textureMaterial;
-    private float _radius = 3f;
-    private float _distance = 1f;
-    private int _minNumberFields = 5;
+    [SerializeField]
+    private MonoBehaviour _inputSourceBehaviour;
+    private ICharacterInputSource _inputSource;
+
+    private CharacterController _characterController;
+    private Colouring _colouring;
+
+    private void OnEnable()
+    {
+        _colouring = new Colouring(GetComponent<Renderer>());
+    }
 
     private void Start()
     {
-        Lands = new List<Land>();
-        Buffer = new List<Land>();
-        _textureMaterial = GetComponent<Renderer>();
-        
-        Vector3 origin = transform.position;
-        Vector3 direction = transform.forward;
-
-        RaycastHit[] hits = Physics.SphereCastAll(origin, _radius, direction, _distance);
-
-        foreach (var hit in hits)
-        {
-            if (hit.collider.gameObject.TryGetComponent(out Land land))
-            {
-                land.SetMaterial(_textureMaterial.material);
-                Lands.Add(land);
-            }
-        }
+        _inputSource = (ICharacterInputSource)_inputSourceBehaviour;
+        _characterController = GetComponent<CharacterController>();
+        _colouring.Spawn(transform);
     }
-    
-    protected void OnTriggerEnter(Collider other)
+
+    private void Update()
     {
-        if (other.gameObject.TryGetComponent(out Land land))
+        var movement = new Vector3(_inputSource.MovementInput.x, 0f, _inputSource.MovementInput.y);
+        movement *= Speed;
+        _characterController.SimpleMove(movement);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (_colouring != null)
         {
-            if (ReferenceEquals(_textureMaterial, null) == false)
-            {
-                if (ChangeLandMaterial(land))
-                {
-                    Buffer.Add(land);
-                }
-                else if (IsConquerLands())
-                {
-                    PaintInside();
-                }
-            }
+            CheckLand(other);
         }
     }
     
+    private void OnValidate()
+    {
+        if (_inputSourceBehaviour && !(_inputSourceBehaviour is ICharacterInputSource))
+        {
+            Debug.LogError(nameof(_inputSourceBehaviour) + " needs to implement " + nameof(ICharacterInputSource));
+            _inputSourceBehaviour = null;
+        }
+    }
+
     public void SetMap(Map map)
     {
-        _map = map;
+        if (_colouring != null)
+        {
+            _colouring.SetMap(map);
+        }
     }
-    
+
+    private void Die()
+    {
+        _colouring.Clean();
+        gameObject.SetActive(false);
+    }
+
+    private void CheckLand(Collider collider)
+    {
+        if (collider.gameObject.TryGetComponent(out Land land))
+        {
+            if (_colouring.ChangeLandMaterial(land))
+            {
+                _colouring?.AddBuffer(land);
+            }
+            else if (_colouring.IsConquerLands())
+            {
+                if (_colouring?.PaintInside() == false)
+                {
+                    Die();
+                }
+            }
+        }
+    }
+
+    /*
     private bool ChangeLandMaterial(Land land)
     {
-        if (Lands.Contains(land) == false)
+        if (_lands.Contains(land) == false)
         {
             land.SetMaterial(_textureMaterial.material);
         }
@@ -75,11 +103,11 @@ public class Character : MonoBehaviour
         return true;
     }
 
-    private bool IsConquerLands() => Buffer != null && Buffer.Count >= 1;
+    private bool IsConquerLands() => _buffer != null && _buffer.Count >= 1;
 
     private bool IsColorNotCorrect()
     {
-        foreach (var land in Buffer)
+        foreach (var land in _buffer)
         {
             if (land.IsNotValidMaterial(_textureMaterial.material))
             {
@@ -97,49 +125,55 @@ public class Character : MonoBehaviour
             Die();
             return;
         }
-        
-        if (Buffer.Count > _minNumberFields)
+
+        if (_buffer.Count > _minNumberFields)
         {
             List<Land> lands = new List<Land>();
-            Vector3[] positions = new Vector3[Buffer.Count];
+            Vector3[] positions = new Vector3[_buffer.Count];
 
-            for (int i = 0; i < Buffer.Count; i++)
+            for (int i = 0; i < _buffer.Count; i++)
             {
-                positions[i] = Buffer[i].transform.position;
+                positions[i] = _buffer[i].transform.position;
             }
-        
+
             var minPoint = Calculate.FindMinPoint(positions);
             var maxPoint = Calculate.FindMaxPoint(positions);
-            var iteration = Calculate.GetSquareArea(minPoint, maxPoint);
             var centerPoint = Calculate.FindCenter(minPoint, maxPoint);
-            
-            Buffer.AddRange(_map.TakeLands(ref lands, _textureMaterial.material, centerPoint));
-        
+
+            _buffer.AddRange(_map.TakeLands(ref lands, _textureMaterial.material, centerPoint));
+
             foreach (var variaLand in lands)
             {
                 variaLand.SetMaterial(_textureMaterial.material);
             }
-            
+
             positions = null;
             lands = null;
         }
-        
-        Lands.AddRange(Buffer);
-        Buffer.Clear();
+
+        _lands.AddRange(_buffer);
+        _buffer.Clear();
     }
 
-    private void Die()
+    private void Spawn()
     {
-        Lands.AddRange(Buffer);
+        _lands = new List<Land>();
+        _buffer = new List<Land>();
+        _textureMaterial = GetComponent<Renderer>();
 
-        foreach (var land in Lands)
+        Vector3 origin = transform.position;
+        Vector3 direction = transform.forward;
+
+        RaycastHit[] hits = Physics.SphereCastAll(origin, _radius, direction, _distance);
+
+        foreach (var hit in hits)
         {
-            _map.SetDefaultMaterial(land);
+            if (hit.collider.gameObject.TryGetComponent(out Land land))
+            {
+                land.SetMaterial(_textureMaterial.material);
+                _lands.Add(land);
+            }
         }
-
-        Lands = null;
-        Buffer = null;
-        
-        gameObject.SetActive(false);
     }
+    */
 }

@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 2657080750849193308}
   - component: {fileID: 7761071185720544702}
   - component: {fileID: 5127269009132876882}
-  - component: {fileID: 7723986240277135024}
+  - component: {fileID: -7311660425185179841}
+  - component: {fileID: -5776120241453552289}
   - component: {fileID: 3540119353740188017}
   - component: {fileID: 8680907526576595061}
+  - component: {fileID: 6628560651728207921}
   m_Layer: 6
   m_Name: Bot
   m_TagString: Untagged
@@ -64,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5e148de6cdf2d164aa3e3f90ce8c852c, type: 2}
+  - {fileID: 2100000, guid: e7c9e73060532ea46ae00e3478492deb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -86,7 +88,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7723986240277135024
+--- !u!114 &-7311660425185179841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245234063773211564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50cddc9c2a84d2544ad706f0915f7304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-5776120241453552289
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,6 +112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49fb5383af80f01479dc7c857bdac6fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ds: 0
+  _inputSourceBehaviour: {fileID: -7311660425185179841}
 --- !u!54 &3540119353740188017
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -146,3 +162,29 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.2
   m_Center: {x: 0, y: -0.4, z: 0}
+--- !u!143 &6628560651728207921
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245234063773211564}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
