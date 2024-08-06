@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour, ICharacterInputSource
 {
-    public Vector3 MovementInput { get; private set; }
+    public Vector2 MovementInput { get; private set; }
 
     private void Update()
     {

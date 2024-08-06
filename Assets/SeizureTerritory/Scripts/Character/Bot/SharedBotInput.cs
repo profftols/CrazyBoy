@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
-using UnityEngine;
 
 [Serializable]
-public class SharedBotInput : SharedVariable<Bot>
+public class SharedBotInput : SharedVariable<BotInput>
 {
-    public static implicit operator SharedBotInput(Bot value) => new SharedBotInput { Value = value };
+    public static implicit operator SharedBotInput(BotInput value) => new SharedBotInput { Value = value };
 }

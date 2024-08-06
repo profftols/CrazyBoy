@@ -11,7 +11,6 @@ using Object = UnityEngine.Object;
 public class Character : MonoBehaviour
 {
     private const float Speed = 5f;
-    public float _ds;
 
     [SerializeField]
     private MonoBehaviour _inputSourceBehaviour;

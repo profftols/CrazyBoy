@@ -2,5 +2,5 @@
 
 public interface ICharacterInputSource
 {
-    Vector3 MovementInput { get; }
+    Vector2 MovementInput { get; }
 }
