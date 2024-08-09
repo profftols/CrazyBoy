@@ -27,7 +27,7 @@ public class Map : MonoBehaviour
                 land.transform.SetParent(gameObject.transform);
             }
         }
-        
+
         _defaultLand = _lands[0, 0].GetComponent<Renderer>();
     }
 
@@ -42,14 +42,14 @@ public class Map : MonoBehaviour
         {
             return null;
         }
-        
+
         return _lands[x, z];
     }
 
     public List<Land> TakeLands(ref List<Land> lands, Material material, Vector3 start)
     {
         lands.Add(_lands[(int)start.x, (int)start.z]);
-        
+
         Vector3Int[] directions = new Vector3Int[]
         {
             new(1, 0, 0),
@@ -66,8 +66,8 @@ public class Map : MonoBehaviour
             foreach (var direction in directions)
             {
                 Vector3Int newPosition = position + direction;
-                
-                if (TryGetLand(ref lands,material, (uint)newPosition.x, (uint)newPosition.z, out Land newLand))
+
+                if (TryGetLand(ref lands, material, (uint)newPosition.x, (uint)newPosition.z, out Land newLand))
                 {
                     CheckLand(ref lands, newLand);
                 }
@@ -84,13 +84,13 @@ public class Map : MonoBehaviour
             land = null;
             return false;
         }
-        
+
         if (lands.Contains(_lands[x, z]) == false && material.color != _lands[x, z].Texture.material.color)
         {
             land = _lands[x, z];
             return true;
         }
-        
+
         land = null;
         return false;
     }

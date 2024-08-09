@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Colouring
@@ -10,7 +11,6 @@ public class Colouring
     private Renderer _textureMaterial;
     private float _radius = 3f;
     private float _distance = 1f;
-    private int _minNumberFields = 5;
 
     public Colouring(Renderer textureMaterial)
     {
@@ -54,33 +54,25 @@ public class Colouring
         {
             return false;
         }
-
-        if (_buffer.Count > _minNumberFields)
+        
+        _lands.AddRange(_buffer);
+        
+        if (Calculation.IsValidLands(_buffer))
         {
             List<Land> lands = new List<Land>();
-            Vector3[] positions = new Vector3[_buffer.Count];
-
-            for (int i = 0; i < _buffer.Count; i++)
-            {
-                positions[i] = _buffer[i].transform.position;
-            }
-
-            var minPoint = Calculate.FindMinPoint(positions);
-            var maxPoint = Calculate.FindMaxPoint(positions);
-            var centerPoint = Calculate.FindCenter(minPoint, maxPoint);
-
-            _buffer.AddRange(_map.TakeLands(ref lands, _textureMaterial.material, centerPoint));
+            
+            var startPoint = Calculation.GetInsideLands(_buffer);
+            
+            _buffer.AddRange(_map.TakeLands(ref lands, _textureMaterial.material, startPoint));
 
             foreach (var variaLand in lands)
             {
                 variaLand.SetMaterial(_textureMaterial.material);
             }
 
-            positions = null;
             lands = null;
         }
-
-        _lands.AddRange(_buffer);
+        
         _buffer.Clear();
         return true;
     }
