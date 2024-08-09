@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Colouring
 {
-    private List<Land> _lands;
-    private List<Land> _buffer;
     private Map _map;
     private Renderer _textureMaterial;
     private float _radius = 3f;
@@ -17,13 +15,13 @@ public class Colouring
         _textureMaterial = textureMaterial;
     }
 
-    public bool IsConquerLands() => _buffer != null && _buffer.Count >= 1;
-    
-    public void AddBuffer(Land land) => _buffer.Add(land);
-    
-    public bool ChangeLandMaterial(Land land)
+    public bool IsConquerLands(List<Land> buffer) => buffer != null && buffer.Count >= 1;
+
+    public void AddBuffer(Land land, List<Land> buffer) => buffer.Add(land);
+
+    public bool IsChangeLandMaterial(Land land, List<Land> lands)
     {
-        if (_lands?.Contains(land) == false)
+        if (lands?.Contains(land) == false)
         {
             land.SetMaterial(_textureMaterial.material);
         }
@@ -35,9 +33,9 @@ public class Colouring
         return true;
     }
 
-    private bool IsColorNotCorrect()
+    public bool IsColorNotCorrect(List<Land> buffers)
     {
-        foreach (var land in _buffer)
+        foreach (var land in buffers)
         {
             if (land.IsNotValidMaterial(_textureMaterial.material))
             {
@@ -48,52 +46,21 @@ public class Colouring
         return false;
     }
 
-    public bool PaintInside()
+    public void PaintInside(List<Land> lands)
     {
-        if (IsColorNotCorrect())
-        {
-            return false;
-        }
-        
-        _lands.AddRange(_buffer);
-        
-        if (Calculation.IsValidLands(_buffer))
-        {
-            List<Land> lands = new List<Land>();
-            
-            var startPoint = Calculation.GetInsideLands(_buffer);
-            
-            _buffer.AddRange(_map.TakeLands(ref lands, _textureMaterial.material, startPoint));
+        //var startPoint = Calculation.GetInsideLands(_buffer);
 
-            foreach (var variaLand in lands)
-            {
-                variaLand.SetMaterial(_textureMaterial.material);
-            }
+        //_buffer.AddRange(_map.TakeLands(ref lands, _textureMaterial.material, startPoint));
 
-            lands = null;
+        foreach (var variaLand in lands)
+        {
+            variaLand.SetMaterial(_textureMaterial.material);
         }
-        
-        _buffer.Clear();
-        return true;
     }
 
-    public void Clean()
+    public List<Land> Spawn(Transform transform)
     {
-        _lands.AddRange(_buffer);
-
-        foreach (var land in _lands)
-        {
-            _map.SetDefaultMaterial(land);
-        }
-
-        _lands = null;
-        _buffer = null;
-    }
-    
-    public void Spawn(Transform transform)
-    {
-        _lands = new List<Land>();
-        _buffer = new List<Land>();
+        var lands = new List<Land>();
 
         Vector3 origin = transform.position;
         Vector3 direction = transform.forward;
@@ -105,9 +72,11 @@ public class Colouring
             if (hit.collider.gameObject.TryGetComponent(out Land land))
             {
                 land.SetMaterial(_textureMaterial.material);
-                _lands.Add(land);
+                lands.Add(land);
             }
         }
+
+        return lands;
     }
 
     public void SetMap(Map map)

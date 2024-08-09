@@ -24,11 +24,19 @@ public static class Calculation
         return Math.Abs(xMax - xMin) > 1 || Math.Abs(zMax - zMin) > 1;
     }
 
-    public static Queue<Vector3> GetCoordinates(List<Land> buffer, List<Land> lands)
+    public static Vector3[] GetPerimeter(List<Land> lands)
     {
-        Queue<Vector3> positions = new Queue<Vector3>();
-
-
-        return positions;
+        var minPointX = lands.Min(l => l.transform.position.x);
+        var maxPointX = lands.Max(l => l.transform.position.x);
+        var minPointZ = lands.Min(l => l.transform.position.z);
+        var maxPointZ = lands.Max(l => l.transform.position.z);
+        
+        var squareArea = new Vector3[4];
+        squareArea[0] = new Vector3(minPointX, 0, minPointZ);
+        squareArea[1] = new Vector3(maxPointX, 0, maxPointZ);
+        squareArea[2] = new Vector3(maxPointX, 0, minPointZ);
+        squareArea[3] = new Vector3(minPointX, 0, maxPointZ);
+        
+        return squareArea;
     }
 }

@@ -18,17 +18,19 @@ public class Character : MonoBehaviour
 
     private CharacterController _characterController;
     private Colouring _colouring;
-
-    private void OnEnable()
-    {
-        _colouring = new Colouring(GetComponent<Renderer>());
-    }
+    private Map _map;
+    
+    private List<Land> _lands;
+    private List<Land> _buffer;
 
     private void Start()
     {
+        _lands = new List<Land>();
+        _buffer = new List<Land>();
+        _colouring = new Colouring(GetComponent<Renderer>());
         _inputSource = (ICharacterInputSource)_inputSourceBehaviour;
         _characterController = GetComponent<CharacterController>();
-        _colouring.Spawn(transform);
+        _lands.AddRange(_colouring.Spawn(transform));
     }
 
     private void Update()
@@ -57,15 +59,20 @@ public class Character : MonoBehaviour
 
     public void SetMap(Map map)
     {
-        if (_colouring != null)
-        {
-            _colouring.SetMap(map);
-        }
+        _map = map;
     }
 
     private void Die()
     {
-        _colouring.Clean();
+        _lands.AddRange(_buffer);
+
+        foreach (var land in _lands)
+        {
+            _map.SetDefaultMaterial(land);
+        }
+
+        _lands = null;
+        _buffer = null;
         gameObject.SetActive(false);
     }
 
@@ -73,16 +80,29 @@ public class Character : MonoBehaviour
     {
         if (collider.gameObject.TryGetComponent(out Land land))
         {
-            if (_colouring.ChangeLandMaterial(land))
+            if (_colouring.IsChangeLandMaterial(land, _lands))
             {
-                _colouring?.AddBuffer(land);
-            }
-            else if (_colouring.IsConquerLands())
-            {
-                if (_colouring?.PaintInside() == false)
+                if (_buffer.Contains(land))
                 {
                     Die();
+                    return;
                 }
+
+                _buffer.Add(land);
+            }
+            else if (Calculation.IsValidLands(_buffer))
+            {
+                if (_colouring.IsColorNotCorrect(_buffer))
+                {
+                    Die();
+                    return;
+                }
+                
+                _lands.AddRange(_buffer);
+                var lands = _map.TakeLands(_lands);
+                _colouring.PaintInside(lands);
+                _lands.AddRange(lands);
+                _buffer.Clear();
             }
         }
     }
