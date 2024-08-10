@@ -103,6 +103,7 @@ public class Character : MonoBehaviour
                 _colouring.PaintInside(lands);
                 _lands.AddRange(lands);
                 _buffer.Clear();
+                lands = null;
             }
         }
     }

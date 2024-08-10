@@ -47,51 +47,20 @@ public class Map : MonoBehaviour
         return _lands[x, z];
     }
 
-    public List<Land> TakeLands(ref List<Land> lands, Material material, Vector3 start)
-    {
-        lands.Add(_lands[(int)start.x, (int)start.z]);
-
-        Vector3Int[] directions = new Vector3Int[]
-        {
-            new(1, 0, 0),
-            new(-1, 0, 0),
-            new(0, 0, 1),
-            new(0, 0, -1)
-        };
-
-        for (int i = 0; i < lands.Count; i++)
-        {
-            Vector3Int position = new Vector3Int((int)lands[i].transform.position.x, (int)lands[i].transform.position.y,
-                (int)lands[i].transform.position.z);
-
-            foreach (var direction in directions)
-            {
-                Vector3Int newPosition = position + direction;
-
-                if (TryGetLand(ref lands, material, (uint)newPosition.x, (uint)newPosition.z, out Land newLand))
-                {
-                    CheckLand(ref lands, newLand);
-                }
-            }
-        }
-
-        return lands;
-    }
-
     public List<Land> TakeLands(List<Land> lands)
     {
         var temp = new List<Land>();
-        var visited = new List<Vector3>();
+        var visited = new List<Land>();
 
         var minPointX = (int)lands.Min(l => l.transform.position.x);
         var maxPointX = (int)lands.Max(l => l.transform.position.x);
         var minPointZ = (int)lands.Min(l => l.transform.position.z);
         var maxPointZ = (int)lands.Max(l => l.transform.position.z);
 
-        minPointX -= 1 > 0 ? minPointX -= 1 : minPointX = 0;
-        maxPointX += 1 < _sizeX ? maxPointX += 1 : maxPointX = _sizeX;
-        minPointZ -= 1 > 0 ? minPointZ -= 1 : minPointZ = 0;
-        maxPointZ += 1 < _sizeY ? maxPointZ += 1 : maxPointZ = _sizeY;
+        minPointX = minPointX > 0 ? minPointX -= 1 : minPointX = 0;
+        maxPointX = maxPointX < _sizeX - 1 ? maxPointX += 1 : maxPointX;
+        minPointZ = minPointZ > 0 ? minPointZ -= 1 : minPointZ = 0;
+        maxPointZ = maxPointZ < _sizeY - 1 ? maxPointZ += 1 : maxPointZ;
 
         Vector3Int[] directions = new Vector3Int[]
         {
@@ -101,77 +70,50 @@ public class Map : MonoBehaviour
             new(0, 0, -1)
         };
 
-        // Ниже код предоставила нейросеть говорит так короче. Надо протестить.
-        for (int x = minPointX; x <= maxPointX; x++)
+        for (int x = minPointX; x < maxPointX; x++)
         {
-            for (int y = minPointZ; y <= maxPointZ; y++)
+            for (int y = minPointZ; y < maxPointZ; y++)
             {
                 if (x == minPointX || x == maxPointX || y == minPointZ || y == maxPointZ)
                 {
-                    foreach (var direction in directions)
+                    if (TryGetLand(lands, (uint)x, (uint)y))
                     {
-                        Vector3Int newPosition = new Vector3Int(x, 0, y) + direction;
-                        
-                        if (!lands.Contains(_lands[x, y]))
-                        {
-                            visited.Add(_lands[x, y].transform.position);
-                        }
+                        visited.Add(_lands[x, y]);
                     }
                 }
             }
         }
 
-        /*for (int x = minPointX; x < maxPointX; x++)
+        for (int i = 0; i < visited.Count; i++)
         {
             foreach (var direction in directions)
             {
-                Vector3Int newPosition = new Vector3Int(x, 0, minPointZ) + direction;
+                Vector3Int position =
+                    new Vector3Int((int)visited[i].transform.position.x, 0, (int)visited[i].transform.position.z) +
+                    direction;
 
-                if (lands.Contains(_lands[x, minPointZ]) == false)
+                if (position.x < maxPointX && position.z < maxPointZ
+                    || position.x > minPointX && position.z > minPointZ)
                 {
-                    visited.Add(_lands[x, minPointZ].transform.position);
-                }
-            }
-        }
-
-        for (int y = minPointZ; y < maxPointZ; y++)
-        {
-            foreach (var direction in directions)
-            {
-                Vector3Int newPosition = new Vector3Int(minPointX, 0, y) + direction;
-
-                if (lands.Contains(_lands[minPointX, y]) == false)
-                {
-                    visited.Add(_lands[minPointX, y].transform.position);
+                    if (TryGetLand(lands, (uint)position.x, (uint)position.z) &&
+                        TryGetLand(visited, (uint)position.x, (uint)position.z))
+                    {
+                        visited.Add(_lands[position.x, position.z]);
+                    }
                 }
             }
         }
 
         for (int x = minPointX; x < maxPointX; x++)
         {
-            foreach (var direction in directions)
+            for (int y = minPointZ; y < maxPointZ; y++)
             {
-                Vector3Int newPosition = new Vector3Int(x, 0, maxPointZ) + direction;
-
-                if (lands.Contains(_lands[x, maxPointZ]) == false)
+                if (lands.Contains(_lands[x, y]) == false && visited.Contains(_lands[x, y]) == false)
                 {
-                    visited.Add(_lands[x, maxPointZ].transform.position);
+                    temp.Add(_lands[x, y]);
                 }
             }
         }
-
-        for (int y = minPointZ; y < maxPointZ; y++)
-        {
-            foreach (var direction in directions)
-            {
-                Vector3Int newPosition = new Vector3Int(maxPointX, 0, y) + direction;
-
-                if (lands.Contains(_lands[maxPointX, y]) == false)
-                {
-                    visited.Add(_lands[maxPointX, y].transform.position);
-                }
-            }
-        }*/
 
         return temp;
     }
@@ -191,22 +133,19 @@ public class Map : MonoBehaviour
         return false;
     }
 
-    private bool TryGetLand(ref List<Land> lands, Material material, uint x, uint z, out Land land)
+    private bool TryGetLand(List<Land> lands, uint x, uint y)
     {
-        if (x >= _sizeX || z >= _sizeY)
+        if (x >= _sizeX || y >= _sizeY)
         {
-            land = null;
             return false;
         }
 
-        if (lands.Contains(_lands[x, z]) == false && material.color != _lands[x, z].Texture.material.color)
+        if (lands.Contains(_lands[x, y]))
         {
-            land = _lands[x, z];
-            return true;
+            return false;
         }
 
-        land = null;
-        return false;
+        return true;
     }
 
     private void CheckLand(ref List<Land> lands, Land land)

@@ -48,10 +48,6 @@ public class Colouring
 
     public void PaintInside(List<Land> lands)
     {
-        //var startPoint = Calculation.GetInsideLands(_buffer);
-
-        //_buffer.AddRange(_map.TakeLands(ref lands, _textureMaterial.material, startPoint));
-
         foreach (var variaLand in lands)
         {
             variaLand.SetMaterial(_textureMaterial.material);
