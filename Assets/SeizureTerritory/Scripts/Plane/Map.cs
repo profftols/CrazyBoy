@@ -37,16 +37,6 @@ public class Map : MonoBehaviour
         land.SetMaterial(_defaultLand.material);
     }
 
-    public Land TakeLand(int x, int z)
-    {
-        if (x >= _sizeX || z >= _sizeY)
-        {
-            return null;
-        }
-
-        return _lands[x, z];
-    }
-
     public List<Land> TakeLands(List<Land> lands)
     {
         var temp = new List<Land>();
@@ -118,21 +108,6 @@ public class Map : MonoBehaviour
         return temp;
     }
 
-    private bool IsCorrectLand(uint x, uint z, List<Land> lands)
-    {
-        if (x >= _sizeX || z >= _sizeY)
-        {
-            return false;
-        }
-
-        if (lands.Contains(_lands[x, z]) == false)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     private bool TryGetLand(List<Land> lands, uint x, uint y)
     {
         if (x >= _sizeX || y >= _sizeY)
@@ -146,13 +121,5 @@ public class Map : MonoBehaviour
         }
 
         return true;
-    }
-
-    private void CheckLand(ref List<Land> lands, Land land)
-    {
-        if (lands.Contains(land) == false)
-        {
-            lands.Add(land);
-        }
     }
 }
