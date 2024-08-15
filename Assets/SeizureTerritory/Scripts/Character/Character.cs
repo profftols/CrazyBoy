@@ -10,16 +10,18 @@ using Object = UnityEngine.Object;
 [RequireComponent(typeof(Renderer), typeof(CharacterController))]
 public class Character : MonoBehaviour
 {
-    private const float Speed = 6f;
+    private const float Speed = 4f;
 
-    [SerializeField]
-    private MonoBehaviour _inputSourceBehaviour;
+    [SerializeField] private MonoBehaviour _inputSourceBehaviour;
+
+    public float BonusSpeed = 0f;
+    public bool IsInvulnerable = false;
+    
     private ICharacterInputSource _inputSource;
-
     private CharacterController _characterController;
     private Colouring _colouring;
     private Map _map;
-    
+
     private List<Land> _lands;
     private List<Land> _buffer;
 
@@ -36,18 +38,26 @@ public class Character : MonoBehaviour
     private void Update()
     {
         var movement = new Vector3(_inputSource.MovementInput.x, 0f, _inputSource.MovementInput.y);
-        movement *= Speed;
+        movement *= Speed + BonusSpeed;
         _characterController.SimpleMove(movement);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_colouring != null)
+        if (other.gameObject.TryGetComponent(out Land land))
         {
-            CheckLand(other);
+            if (_colouring != null)
+            {
+                CheckLand(land);
+            }
+        }
+
+        if (other.gameObject.TryGetComponent(out Item item))
+        {
+            item.OnPickUp(this);
         }
     }
-    
+
     private void OnValidate()
     {
         if (_inputSourceBehaviour && !(_inputSourceBehaviour is ICharacterInputSource))
@@ -76,35 +86,37 @@ public class Character : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void CheckLand(Collider collider)
+    private void CheckLand(Land land)
     {
-        if (collider.gameObject.TryGetComponent(out Land land))
+        if (_colouring.IsChangeLandMaterial(land, _lands))
         {
-            if (_colouring.IsChangeLandMaterial(land, _lands))
+            if (_buffer.Contains(land))
             {
-                if (_buffer.Contains(land))
-                {
-                    Die();
-                    return;
-                }
-
-                _buffer.Add(land);
+                Die();
+                return;
             }
-            else if (Calculation.IsValidLands(_buffer))
+
+            _buffer.Add(land);
+        }
+        else if (Calculation.IsValidLands(_buffer))
+        {
+            if (_colouring.IsColorNotCorrect(_buffer))
             {
-                if (_colouring.IsColorNotCorrect(_buffer))
+                if (IsInvulnerable)
                 {
-                    Die();
                     return;
                 }
                 
-                _lands.AddRange(_buffer);
-                var lands = _map.TakeLands(_lands);
-                _colouring.PaintInside(lands);
-                _lands.AddRange(lands);
-                _buffer.Clear();
-                lands = null;
+                Die();
+                return;
             }
+
+            _lands.AddRange(_buffer);
+            var lands = _map.TakeLands(_lands);
+            _colouring.PaintInside(lands);
+            _lands.AddRange(lands);
+            _buffer.Clear();
+            lands = null;
         }
     }
 }
