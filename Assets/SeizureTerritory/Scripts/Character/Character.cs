@@ -6,6 +6,7 @@ using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Renderer), typeof(CharacterController))]
 public class Character : MonoBehaviour
