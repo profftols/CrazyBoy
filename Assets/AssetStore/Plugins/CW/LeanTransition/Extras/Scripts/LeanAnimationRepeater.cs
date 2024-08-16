@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-using Lean.Common;
 
 namespace Lean.Transition
 {

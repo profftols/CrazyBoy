@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = System.Random;
 
 public class Spawner : MonoBehaviour
@@ -23,6 +22,16 @@ public class Spawner : MonoBehaviour
     private Random _random;
     private float _timeSpawn = 5f;
     private int _countBonus = 3;
+
+    private void OnEnable()
+    {
+        EventBus.OnComeBackItem += ComebackItem;
+    }
+
+    private void OnDisable()
+    {
+        EventBus.OnComeBackItem -= ComebackItem;
+    }
 
     private void Start()
     {
@@ -46,7 +55,7 @@ public class Spawner : MonoBehaviour
         {
             int count = _random.Next(0, _points.Count - 1);
             var character = Instantiate(_players[i], _points[count].position, Quaternion.identity, null);
-            
+
             if (character is Bot)
             {
                 InstallColor(character as Bot);
@@ -55,11 +64,11 @@ public class Spawner : MonoBehaviour
             {
                 _camera.SetTarget(character.transform);
             }
-            
+
             character.SetMap(_map);
             _points.RemoveAt(count);
         }
-        
+
         StartCoroutine(AddBonus());
     }
 
@@ -79,8 +88,20 @@ public class Spawner : MonoBehaviour
             var index = _random.Next(0, _bonusPoints.Count);
             var bonus = _random.Next(0, 4) > 0 ? _speedPool.TakeBonus() : _invulnerabilityPool.TakeBonus();
             bonus.transform.position = _bonusPoints[index].position;
-            
             yield return wait;
+        }
+    }
+    
+    private void ComebackItem(Item obj)
+    {
+        if (obj is SpeedBonus)
+        {
+            _speedPool.PutBonus(obj);
+        }
+
+        if (obj is InvulnerabilityBonus)
+        {
+            _invulnerabilityPool.PutBonus(obj);
         }
     }
 }

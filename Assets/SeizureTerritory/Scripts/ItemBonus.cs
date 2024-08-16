@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemBonus : MonoBehaviour
@@ -12,19 +10,12 @@ public class ItemBonus : MonoBehaviour
     {
         EventBus.OnBonusSpeed += IncreaseSpeed;
         EventBus.OnBonusInvulnerability += ReceiveInvulnerability;
-        EventBus.OnComeBackItem += ComebackItem;
     }
 
     private void OnDisable()
     {
         EventBus.OnBonusSpeed -= IncreaseSpeed;
         EventBus.OnBonusInvulnerability -= ReceiveInvulnerability;
-        EventBus.OnComeBackItem -= ComebackItem;
-    }
-
-    private void ComebackItem(Item obj)
-    {
-        
     }
     
     private void ReceiveInvulnerability(Character character, bool bonus)

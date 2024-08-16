@@ -1,8 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class SpeedBonus : Item
 {
     protected override float Timer => 4.5f;

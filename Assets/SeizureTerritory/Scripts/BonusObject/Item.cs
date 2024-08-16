@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Item : MonoBehaviour
@@ -17,15 +16,15 @@ public abstract class Item : MonoBehaviour
     private void OnDisable()
     {
         StopCoroutine(StatTimer());
-        EventBus.OnComeBackItem?.Invoke(this);
     }
     
-    protected IEnumerator StatTimer()
+    private IEnumerator StatTimer()
     {
         var wait = new WaitForSeconds(Timer);
 
         yield return wait;
-
+        
         gameObject.SetActive(false);
+        EventBus.OnComeBackItem?.Invoke(this);
     }
 }

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Lean.Common;
 using CW.Common;
 
 namespace Lean.Gui

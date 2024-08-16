@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using CW.Common;
 
 namespace CW.Common
 {

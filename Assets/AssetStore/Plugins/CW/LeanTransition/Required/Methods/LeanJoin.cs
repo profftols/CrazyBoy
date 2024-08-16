@@ -1,5 +1,4 @@
 using UnityEngine;
-using Lean.Common;
 
 namespace Lean.Transition.Method
 {

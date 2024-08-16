@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.Sqlite;
-using UnityEditor.Experimental.GraphView;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Object = UnityEngine.Object;
-using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Renderer), typeof(CharacterController))]
 public class Character : MonoBehaviour
@@ -15,9 +8,9 @@ public class Character : MonoBehaviour
 
     [SerializeField] private MonoBehaviour _inputSourceBehaviour;
 
-    public float BonusSpeed = 0f;
-    public bool IsInvulnerable = false;
-    
+    public float BonusSpeed;
+    public bool IsInvulnerable;
+
     private ICharacterInputSource _inputSource;
     private CharacterController _characterController;
     private Colouring _colouring;
@@ -107,7 +100,7 @@ public class Character : MonoBehaviour
                 {
                     return;
                 }
-                
+
                 Die();
                 return;
             }
@@ -117,7 +110,6 @@ public class Character : MonoBehaviour
             _colouring.PaintInside(lands);
             _lands.AddRange(lands);
             _buffer.Clear();
-            lands = null;
         }
     }
 }
