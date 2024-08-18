@@ -1,4 +1,6 @@
-﻿public class Player : Character
+﻿using UnityEngine;
+
+public class Player : Character
 {
     private void LateUpdate()
     {

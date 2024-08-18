@@ -222,10 +222,7 @@ MonoBehaviour:
   _map: {fileID: 520937535}
   _players:
   - {fileID: -5776120241453552289, guid: 19c6e2d3c78f2c746a286b14f512d5d3, type: 3}
-  - {fileID: -5776120241453552289, guid: 19c6e2d3c78f2c746a286b14f512d5d3, type: 3}
-  - {fileID: -5776120241453552289, guid: 19c6e2d3c78f2c746a286b14f512d5d3, type: 3}
   - {fileID: 4771677176038674174, guid: b6f503e4e1df2c7469b95fb49fb116c8, type: 3}
-  - {fileID: -5776120241453552289, guid: 19c6e2d3c78f2c746a286b14f512d5d3, type: 3}
   _materials:
   - {fileID: 2100000, guid: 433ce92714a7cd14980b6b806436f88e, type: 2}
   - {fileID: 2100000, guid: 5b0dcdc0a67177c478d06f1160d57ea0, type: 2}
