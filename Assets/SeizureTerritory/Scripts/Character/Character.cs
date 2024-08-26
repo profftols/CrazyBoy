@@ -4,36 +4,23 @@ using UnityEngine;
 [RequireComponent(typeof(Renderer), typeof(CharacterController))]
 public class Character : MonoBehaviour
 {
-    private const float Speed = 4f;
-
-    [SerializeField] private MonoBehaviour _inputSourceBehaviour;
+    protected const float Speed = 4f;
 
     public float BonusSpeed;
     public bool IsInvulnerable;
-
-    private ICharacterInputSource _inputSource;
-    private CharacterController _characterController;
+    
     private Colouring _colouring;
     private Map _map;
 
     private List<Land> _lands;
     private List<Land> _buffer;
 
-    private void Start()
+    protected virtual void Start()
     {
         _lands = new List<Land>();
         _buffer = new List<Land>();
         _colouring = new Colouring(GetComponent<Renderer>());
-        _inputSource = (ICharacterInputSource)_inputSourceBehaviour;
-        _characterController = GetComponent<CharacterController>();
         _lands.AddRange(_colouring.Spawn(transform));
-    }
-
-    private void Update()
-    {
-        var movement = new Vector3(_inputSource.MovementInput.x, 0f, _inputSource.MovementInput.y);
-        movement *= Speed + BonusSpeed;
-        _characterController.SimpleMove(movement);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -52,15 +39,6 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void OnValidate()
-    {
-        if (_inputSourceBehaviour && !(_inputSourceBehaviour is ICharacterInputSource))
-        {
-            Debug.LogError(nameof(_inputSourceBehaviour) + " needs to implement " + nameof(ICharacterInputSource));
-            _inputSourceBehaviour = null;
-        }
-    }
-
     public void SetMap(Map map)
     {
         _map = map;
@@ -68,6 +46,11 @@ public class Character : MonoBehaviour
 
     private void Die()
     {
+        if (IsInvulnerable)
+        {
+            return;
+        }
+        
         _lands.AddRange(_buffer);
 
         foreach (var land in _lands)
@@ -105,11 +88,16 @@ public class Character : MonoBehaviour
                 return;
             }
 
-            _lands.AddRange(_buffer);
-            var lands = _map.TakeLands(_lands);
-            _colouring.PaintInside(lands);
-            _lands.AddRange(lands);
-            _buffer.Clear();
+            CompleteLand();
         }
+    }
+
+    private void CompleteLand()
+    {
+        _lands.AddRange(_buffer);
+        var lands = _map.TakeLands(_lands);
+        _colouring.PaintInside(lands);
+        _lands.AddRange(lands);
+        _buffer.Clear();
     }
 }

@@ -13,10 +13,6 @@ public class Colouring
         _textureMaterial = textureMaterial;
     }
 
-    public bool IsConquerLands(List<Land> buffer) => buffer != null && buffer.Count >= 1;
-
-    public void AddBuffer(Land land, List<Land> buffer) => buffer.Add(land);
-
     public bool IsChangeLandMaterial(Land land, List<Land> lands)
     {
         if (lands?.Contains(land) == false)
@@ -71,10 +67,5 @@ public class Colouring
         }
 
         return lands;
-    }
-
-    public void SetMap(Map map)
-    {
-        _map = map;
     }
 }
