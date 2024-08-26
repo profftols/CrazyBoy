@@ -6,28 +6,30 @@ public class Character : MonoBehaviour
 {
     protected const float Speed = 4f;
 
+    public Colouring Colouring { get; private set; }
     public float BonusSpeed;
     public bool IsInvulnerable;
     
-    private Colouring _colouring;
+    protected CharacterController ControllerCharacter;
+    
     private Map _map;
-
     private List<Land> _lands;
     private List<Land> _buffer;
 
     protected virtual void Start()
     {
+        ControllerCharacter = GetComponent<CharacterController>();
         _lands = new List<Land>();
         _buffer = new List<Land>();
-        _colouring = new Colouring(GetComponent<Renderer>());
-        _lands.AddRange(_colouring.Spawn(transform));
+        Colouring = new Colouring(GetComponent<Renderer>());
+        _lands.AddRange(Colouring.Spawn(transform));
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out Land land))
         {
-            if (_colouring != null)
+            if (Colouring != null)
             {
                 CheckLand(land);
             }
@@ -65,7 +67,7 @@ public class Character : MonoBehaviour
 
     private void CheckLand(Land land)
     {
-        if (_colouring.IsChangeLandMaterial(land, _lands))
+        if (Colouring.IsChangeLandMaterial(land, _lands))
         {
             if (_buffer.Contains(land))
             {
@@ -77,7 +79,7 @@ public class Character : MonoBehaviour
         }
         else if (Calculation.IsValidLands(_buffer))
         {
-            if (_colouring.IsColorNotCorrect(_buffer))
+            if (Colouring.IsColorNotCorrect(_buffer))
             {
                 if (IsInvulnerable)
                 {
@@ -96,7 +98,7 @@ public class Character : MonoBehaviour
     {
         _lands.AddRange(_buffer);
         var lands = _map.TakeLands(_lands);
-        _colouring.PaintInside(lands);
+        Colouring.PaintInside(lands);
         _lands.AddRange(lands);
         _buffer.Clear();
     }

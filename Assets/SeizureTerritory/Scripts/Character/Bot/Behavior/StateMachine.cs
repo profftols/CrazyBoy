@@ -2,7 +2,7 @@
 {
     public class StateMachine
     {
-        public State CurrentState { get; set; }
+        public State CurrentState { get; private set; }
         
         public void Initialize(State initialState)
         {
