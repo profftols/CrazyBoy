@@ -10,6 +10,7 @@ public class Map : MonoBehaviour
     [SerializeField] private Land _land;
     [SerializeField] public int _sizeX;
     [SerializeField] public int _sizeY;
+    [SerializeField] private Material[] _materials;
 
     private Renderer _defaultLand;
     private Land[,] _lands;
@@ -32,7 +33,7 @@ public class Map : MonoBehaviour
             }
         }
 
-        _defaultLand = _lands[0, 0].GetComponent<Renderer>();
+        _defaultLand = _land.GetComponent<Renderer>();
     }
 
     public void SetDefaultMaterial(Land land)

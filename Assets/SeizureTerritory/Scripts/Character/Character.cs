@@ -7,10 +7,11 @@ public class Character : MonoBehaviour
     protected const float Speed = 4f;
 
     public Colouring Colouring { get; private set; }
+    public CharacterController ControllerCharacter { get; private set; }
+    
     public float BonusSpeed;
     public bool IsInvulnerable;
     
-    protected CharacterController ControllerCharacter;
     
     private Map _map;
     private List<Land> _lands;
@@ -46,6 +47,35 @@ public class Character : MonoBehaviour
         _map = map;
     }
 
+    public bool CheckHomeLand(Land land)
+    {
+        if (_lands.Contains(land))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public Vector3 GetMinimumDistance(Vector3 position)
+    {
+        int minDistance = int.MaxValue;
+        Vector3 closestDistance = new Vector3();
+        
+        foreach (var variaLand in _lands)
+        {
+            int distance = (int)Vector3.Distance(variaLand.transform.position, position);
+                        
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestDistance = variaLand.transform.position;
+            }
+        }
+        
+        return closestDistance;
+    }
+
     private void Die()
     {
         if (IsInvulnerable)
@@ -69,11 +99,11 @@ public class Character : MonoBehaviour
     {
         if (Colouring.IsChangeLandMaterial(land, _lands))
         {
-            if (_buffer.Contains(land))
+            /*if (_buffer.Contains(land))
             {
                 Die();
                 return;
-            }
+            }*/
 
             _buffer.Add(land);
         }
@@ -85,7 +115,7 @@ public class Character : MonoBehaviour
                 {
                     return;
                 }
-
+                
                 Die();
                 return;
             }

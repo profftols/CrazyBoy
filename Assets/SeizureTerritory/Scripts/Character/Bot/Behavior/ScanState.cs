@@ -3,31 +3,31 @@ using UnityEngine;
 
 namespace SeizureTerritory.Scripts.Behavior
 {
-    public class ScanState : State
+    public class ScanState : StateBot
     {
-        private Bot _bot;
-        private Queue<Vector2> _directions;
+        private readonly Queue<Vector2> _directions;
+        private readonly float _distance = 1f;
         private float _radius = 7.5f;
-        private float _distance = 1f;
 
-        public ScanState(Bot bot)
+        public ScanState(Bot bot) : base(bot)
         {
             _directions = new Queue<Vector2>();
-            _bot = bot;
         }
 
         public override void Enter()
         {
-            FindPosition();
+            FindPositions();
+            
+            _bot.ChangeState(new RunState(_directions, _bot));
         }
 
-        private void FindPosition()
+        private void FindPositions()
         {
             var transform = _bot.transform;
             var position = transform.position;
             RaycastHit[] hits = Physics.SphereCastAll(position, _radius, transform.forward, _distance);
             List<Land> lands = new List<Land>();
-            
+
             foreach (var hit in hits)
             {
                 if (hit.collider.gameObject.TryGetComponent(out Land land))
@@ -38,46 +38,22 @@ namespace SeizureTerritory.Scripts.Behavior
                     }
                 }
             }
-            
+
             if (lands.Count == 0)
             {
                 _radius++;
-                FindPosition();
+                FindPositions(); //УБрать погнать еще раз увелич радиусом
             }
             else
             {
                 var newPosition = lands[Random.Range(0, lands.Count)].transform.position;
-                _directions.Enqueue(new Vector2(newPosition.x - position.x, newPosition.z - position.z));
+                _directions.Enqueue(new Vector2(newPosition.x, newPosition.z));
             }
 
             var lastPosition = lands[Random.Range(0, lands.Count)].transform.position;
-            _directions.Enqueue(new Vector2(lastPosition.x - position.x, lastPosition.z - position.z));
-            _directions.Enqueue(FindClosetPosition(hits, lastPosition));
-        }
-
-        private Vector2 FindClosetPosition(RaycastHit[] hits, Vector3 lastPosition)
-        {
-            float minDistance = Mathf.Infinity;
-            Vector3 closestDistance = new Vector3();
-            
-            foreach (var hit in hits)
-            {
-                if (hit.collider.gameObject.TryGetComponent(out Land land))
-                {
-                    if (!land.IsNotValidMaterial(_bot.Colouring.TextureMaterial.material))
-                    {
-                        float distance = Vector3.Distance(land.transform.position, lastPosition);
-                        
-                        if (distance < minDistance)
-                        {
-                            minDistance = distance;
-                            closestDistance = land.transform.position;
-                        }
-                    }
-                }
-            }
-            
-            return new Vector2(closestDistance.x, closestDistance.z);
+            _directions.Enqueue(new Vector2(lastPosition.x, lastPosition.z));
+            Vector3 homePosition = _bot.GetMinimumDistance(lastPosition);;
+            _directions.Enqueue(new Vector2(homePosition.x, homePosition.z));
         }
     }
 }

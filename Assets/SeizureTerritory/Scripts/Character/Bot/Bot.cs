@@ -27,14 +27,14 @@ public class Bot : Character
     
     private void Update()
     {
-        if (_stateMachine.CurrentState != null)
+        if (_stateMachine.CurrentStateBot != null)
         {
-            (_stateMachine.CurrentState as RunState)?.SetSpeed(Speed, BonusSpeed);
-            _stateMachine.CurrentState.Update();
+            (_stateMachine.CurrentStateBot as RunState)?.SetSpeed(Speed, BonusSpeed);
+            _stateMachine.CurrentStateBot.Update();
         }
     }
 
     public void SetMaterial(Material material) => _renderMaterial.material = material;
     
-    public void ChangeState(State newState) => _stateMachine.ChangeState(newState);
+    public void ChangeState(StateBot newStateBot) => _stateMachine.ChangeState(newStateBot);
 }

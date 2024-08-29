@@ -2,19 +2,19 @@
 {
     public class StateMachine
     {
-        public State CurrentState { get; private set; }
+        public StateBot CurrentStateBot { get; private set; }
         
-        public void Initialize(State initialState)
+        public void Initialize(StateBot initialStateBot)
         {
-            CurrentState = initialState;
-            CurrentState.Enter();
+            CurrentStateBot = initialStateBot;
+            CurrentStateBot.Enter();
         }
         
-        public void ChangeState(State newState)
+        public void ChangeState(StateBot newStateBot)
         {
-            CurrentState.Exit();
-            CurrentState = newState;
-            CurrentState.Enter();
+            CurrentStateBot.Exit();
+            CurrentStateBot = newStateBot;
+            CurrentStateBot.Enter();
         }
     }
 }
