@@ -4,22 +4,15 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
-    public static int Xsize { get; private set; }
-    public static int Ysize { get; private set; }
-    
     [SerializeField] private Land _land;
     [SerializeField] public int _sizeX;
     [SerializeField] public int _sizeY;
-    [SerializeField] private Material[] _materials;
 
     private Renderer _defaultLand;
     private Land[,] _lands;
     
     private void Awake()
     {
-        Xsize = _sizeX;
-        Ysize = _sizeY;
-        
         _lands = new Land[_sizeX, _sizeY];
 
         for (int x = 0; x < _sizeX; x++)
@@ -33,7 +26,7 @@ public class Map : MonoBehaviour
             }
         }
 
-        _defaultLand = _land.GetComponent<Renderer>();
+        _defaultLand = _lands[0, 0].GetComponent<Renderer>();
     }
 
     public void SetDefaultMaterial(Land land)

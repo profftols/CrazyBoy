@@ -6,15 +6,13 @@ using UnityEngine;
 
 public class Bot : Character
 {
-    public float radius = 7.5f;
-    
-    private Renderer _renderMaterial;
+    public Renderer Render { get; private set; }
     private StateMachine _stateMachine;
     private ScanState _scanState;
 
     private void Awake()
     {
-        _renderMaterial = GetComponent<Renderer>();
+        Render = GetComponent<Renderer>();
     }
 
     protected override void Start()
@@ -29,12 +27,12 @@ public class Bot : Character
     {
         if (_stateMachine.CurrentStateBot != null)
         {
-            (_stateMachine.CurrentStateBot as RunState)?.SetSpeed(Speed, BonusSpeed);
+            (_stateMachine.CurrentStateBot as RunState)?.SetSpeed(Speed, bonusSpeed);
             _stateMachine.CurrentStateBot.Update();
         }
     }
 
-    public void SetMaterial(Material material) => _renderMaterial.material = material;
+    public void SetMaterial(Material material) => Render.material = material;
     
     public void ChangeState(StateBot newStateBot) => _stateMachine.ChangeState(newStateBot);
 }

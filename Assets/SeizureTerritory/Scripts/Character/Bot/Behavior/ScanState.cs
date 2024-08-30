@@ -32,7 +32,7 @@ namespace SeizureTerritory.Scripts.Behavior
             {
                 if (hit.collider.gameObject.TryGetComponent(out Land land))
                 {
-                    if (land.IsNotValidMaterial(_bot.Colouring.TextureMaterial.material))
+                    if (land.IsNotValidMaterial(_bot.Render.material))
                     {
                         lands.Add(land);
                     }

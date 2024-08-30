@@ -20,13 +20,13 @@ public class ItemBonus : MonoBehaviour
     
     private void ReceiveInvulnerability(Character character, bool bonus)
     {
-        character.IsInvulnerable = bonus;
+        character.isInvulnerable = bonus;
         StartCoroutine(StatTimer(character, bonus));
     }
     
     private void IncreaseSpeed(Character character, float bonus)
     {
-        character.BonusSpeed = bonus;
+        character.bonusSpeed = bonus;
         StartCoroutine(StatTimer(character));
     }
     
@@ -34,13 +34,13 @@ public class ItemBonus : MonoBehaviour
     {
         var wait = new WaitForSeconds(_timerInvulnerability);
         yield return wait;
-        character.IsInvulnerable = !bonus;
+        character.isInvulnerable = !bonus;
     }
     
     private IEnumerator StatTimer(Character character)
     {
         var wait = new WaitForSeconds(_timerSpeed);
         yield return wait;
-        character.BonusSpeed = 0f;
+        character.bonusSpeed = 0f;
     }
 }

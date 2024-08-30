@@ -1,38 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using SeizureTerritory.Scripts.Character;
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer), typeof(CharacterController))]
 public class Character : MonoBehaviour
 {
     protected const float Speed = 4f;
-
-    public Colouring Colouring { get; private set; }
+    
     public CharacterController ControllerCharacter { get; private set; }
     
-    public float BonusSpeed;
-    public bool IsInvulnerable;
-    
-    
-    private Map _map;
-    private List<Land> _lands;
-    private List<Land> _buffer;
+    public float bonusSpeed;
+    public bool isInvulnerable;
 
+    private AreaLand _areaLand;
+    private Map _map;
+    
     protected virtual void Start()
     {
         ControllerCharacter = GetComponent<CharacterController>();
-        _lands = new List<Land>();
-        _buffer = new List<Land>();
-        Colouring = new Colouring(GetComponent<Renderer>());
-        _lands.AddRange(Colouring.Spawn(transform));
+        var map = FindObjectOfType<Map>();
+        _areaLand = new AreaLand(map, new Colouring(GetComponent<Renderer>()), transform);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out Land land))
         {
-            if (Colouring != null)
+            if (_areaLand != null)
             {
-                CheckLand(land);
+                if (_areaLand.TryAddLand(land))
+                {
+                    return;
+                }
+                else if (isInvulnerable == false)
+                {
+                    Die();
+                }
             }
         }
 
@@ -41,95 +45,12 @@ public class Character : MonoBehaviour
             item.OnPickUp(this);
         }
     }
-
-    public void SetMap(Map map)
-    {
-        _map = map;
-    }
-
-    public bool CheckHomeLand(Land land)
-    {
-        if (_lands.Contains(land))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public Vector3 GetMinimumDistance(Vector3 position)
-    {
-        int minDistance = int.MaxValue;
-        Vector3 closestDistance = new Vector3();
-        
-        foreach (var variaLand in _lands)
-        {
-            int distance = (int)Vector3.Distance(variaLand.transform.position, position);
-                        
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                closestDistance = variaLand.transform.position;
-            }
-        }
-        
-        return closestDistance;
-    }
+    
+    public Vector3 GetMinimumDistance(Vector3 position) => _areaLand.GetMinimumDistance(position);
 
     private void Die()
     {
-        if (IsInvulnerable)
-        {
-            return;
-        }
-        
-        _lands.AddRange(_buffer);
-
-        foreach (var land in _lands)
-        {
-            _map.SetDefaultMaterial(land);
-        }
-
-        _lands = null;
-        _buffer = null;
+        _areaLand.Clear();
         gameObject.SetActive(false);
-    }
-
-    private void CheckLand(Land land)
-    {
-        if (Colouring.IsChangeLandMaterial(land, _lands))
-        {
-            /*if (_buffer.Contains(land))
-            {
-                Die();
-                return;
-            }*/
-
-            _buffer.Add(land);
-        }
-        else if (Calculation.IsValidLands(_buffer))
-        {
-            if (Colouring.IsColorNotCorrect(_buffer))
-            {
-                if (IsInvulnerable)
-                {
-                    return;
-                }
-                
-                Die();
-                return;
-            }
-
-            CompleteLand();
-        }
-    }
-
-    private void CompleteLand()
-    {
-        _lands.AddRange(_buffer);
-        var lands = _map.TakeLands(_lands);
-        Colouring.PaintInside(lands);
-        _lands.AddRange(lands);
-        _buffer.Clear();
     }
 }

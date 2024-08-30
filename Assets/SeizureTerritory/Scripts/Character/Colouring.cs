@@ -3,22 +3,21 @@ using UnityEngine;
 
 public class Colouring
 {
-    public Renderer TextureMaterial { get; }
-    
+    private readonly Renderer _render;
     private Map _map;
     private float _radius = 3f;
     private float _distance = 1f;
 
-    public Colouring(Renderer textureMaterial)
+    public Colouring(Renderer render)
     {
-        TextureMaterial = textureMaterial;
+        _render = render;
     }
 
     public bool IsChangeLandMaterial(Land land, List<Land> lands)
     {
         if (lands?.Contains(land) == false)
         {
-            land.SetMaterial(TextureMaterial.material);
+            land.SetMaterial(_render.material);
         }
         else
         {
@@ -32,7 +31,7 @@ public class Colouring
     {
         foreach (var land in buffers)
         {
-            if (land.IsNotValidMaterial(TextureMaterial.material))
+            if (land.IsNotValidMaterial(_render.material))
             {
                 return true;
             }
@@ -45,7 +44,7 @@ public class Colouring
     {
         foreach (var variaLand in lands)
         {
-            variaLand.SetMaterial(TextureMaterial.material);
+            variaLand.SetMaterial(_render.material);
         }
     }
 
@@ -62,7 +61,7 @@ public class Colouring
         {
             if (hit.collider.gameObject.TryGetComponent(out Land land))
             {
-                land.SetMaterial(TextureMaterial.material);
+                land.SetMaterial(_render.material);
                 lands.Add(land);
             }
         }

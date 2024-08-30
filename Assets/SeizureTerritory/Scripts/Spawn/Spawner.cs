@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +10,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] private CameraFollow _camera;
     [SerializeField] private Transform _path;
     [SerializeField] private Transform _pointSpawn;
-    [SerializeField] private Map _map;
     [SerializeField] private Character[] _players;
     [SerializeField] private List<Material> _materials;
 
@@ -20,8 +18,8 @@ public class Spawner : MonoBehaviour
     private BonusPool<Item> _speedPool;
     private BonusPool<Item> _invulnerabilityPool;
     private Random _random;
-    private float _timeSpawn = 5f;
-    private int _countBonus = 3;
+    private readonly float _timeSpawn = 5f;
+    private readonly int _countBonus = 3;
 
     private void OnEnable()
     {
@@ -65,7 +63,6 @@ public class Spawner : MonoBehaviour
                 _camera.SetTarget(character.transform);
             }
 
-            character.SetMap(_map);
             _points.RemoveAt(count);
         }
 

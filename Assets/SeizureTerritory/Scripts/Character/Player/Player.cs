@@ -15,7 +15,7 @@ public class Player : Character
     private void Update()
     {
         var movement = new Vector3(_inputSource.MovementInput.x, 0f, _inputSource.MovementInput.y);
-        movement *= Speed + BonusSpeed;
+        movement *= Speed + bonusSpeed;
         ControllerCharacter.SimpleMove(movement);
     }
 }
