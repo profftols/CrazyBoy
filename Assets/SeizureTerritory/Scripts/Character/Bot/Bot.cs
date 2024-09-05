@@ -18,14 +18,14 @@ public class Bot : Character
     protected override void Start()
     {
         base.Start();
-        _stateMachine = new StateMachine();
+        /*_stateMachine = new StateMachine();
         _scanState = new ScanState(this);
-        _stateMachine.Initialize(_scanState);
+        _stateMachine.Initialize(_scanState);*/
     }
     
     private void Update()
     {
-        if (_stateMachine.CurrentStateBot != null)
+        if (_stateMachine?.CurrentStateBot != null)
         {
             (_stateMachine.CurrentStateBot as RunState)?.SetSpeed(Speed, bonusSpeed);
             _stateMachine.CurrentStateBot.Update();

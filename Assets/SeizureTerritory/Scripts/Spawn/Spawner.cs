@@ -23,12 +23,12 @@ public class Spawner : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.OnComeBackItem += ComebackItem;
+        EventBus.OnComebackItem += ComebackItem;
     }
 
     private void OnDisable()
     {
-        EventBus.OnComeBackItem -= ComebackItem;
+        EventBus.OnComebackItem -= ComebackItem;
     }
 
     private void Start()
@@ -66,7 +66,7 @@ public class Spawner : MonoBehaviour
             _points.RemoveAt(count);
         }
 
-        StartCoroutine(AddBonus());
+        //StartCoroutine(AddBonus());
     }
 
     private void InstallColor(Bot bot)

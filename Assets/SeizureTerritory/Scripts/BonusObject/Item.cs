@@ -25,6 +25,6 @@ public abstract class Item : MonoBehaviour
         yield return wait;
         
         gameObject.SetActive(false);
-        EventBus.OnComeBackItem?.Invoke(this);
+        EventBus.OnComebackItem?.Invoke(this);
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 public class Colouring
 {
     private readonly Renderer _render;
-    private Map _map;
     private float _radius = 3f;
     private float _distance = 1f;
 
@@ -13,25 +12,17 @@ public class Colouring
         _render = render;
     }
 
-    public bool IsChangeLandMaterial(Land land, List<Land> lands)
+    public void ChangeMaterial(Land land)
     {
-        if (lands?.Contains(land) == false)
-        {
-            land.SetMaterial(_render.material);
-        }
-        else
-        {
-            return false;
-        }
-
-        return true;
+        land.SetMaterial(_render.material);
+        land.ActOutline();
     }
 
     public bool IsColorNotCorrect(List<Land> buffers)
     {
         foreach (var land in buffers)
         {
-            if (land.IsNotValidMaterial(_render.material))
+            if (land.IsNotDefaultMaterial(_render.material))
             {
                 return true;
             }
@@ -42,9 +33,9 @@ public class Colouring
 
     public void PaintInside(List<Land> lands)
     {
-        foreach (var variaLand in lands)
+        foreach (var land in lands)
         {
-            variaLand.SetMaterial(_render.material);
+            land.SetMaterial(_render.material);
         }
     }
 
@@ -67,5 +58,10 @@ public class Colouring
         }
 
         return lands;
+    }
+
+    public bool IsEnemyColor(Land land)
+    {
+        return land.IsNotDefaultMaterial(_render.material);
     }
 }
