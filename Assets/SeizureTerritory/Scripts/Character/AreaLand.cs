@@ -19,6 +19,7 @@ namespace SeizureTerritory.Scripts.Character
             _map = map;
             _lands.AddRange(_colouring.Spawn(transform));
             EventBus.OnEnemyLand += Die;
+            EventBus.OnRemoveLand += RemoveLand;
         }
         
         public void SetDeathHandler(IDeathHandler deathHandler)
@@ -69,7 +70,10 @@ namespace SeizureTerritory.Scripts.Character
 
             foreach (var land in _lands)
             {
-                _map.SetDefaultMaterial(land);
+                if (_colouring.IsEnemyColor(land) == false)
+                {
+                    _map.SetDefaultMaterial(land);
+                }
             }
 
             for (int i = 0; i < _lands.Count; i++)
@@ -80,18 +84,25 @@ namespace SeizureTerritory.Scripts.Character
             _lands = null;
             _buffer = null;
             EventBus.OnEnemyLand -= Die;
+            EventBus.OnRemoveLand -= RemoveLand;
         }
 
         private void CompleteLand()
         {
             foreach (var land in _buffer)
             {
-                land.DeactOutline();
+                land.DeactivationOutline();
             }
             
             _lands.AddRange(_buffer);
             _buffer.Clear();
             var lands = _map.TakeLands(_lands);
+
+            foreach (var land in lands)
+            {
+                EventBus.OnRemoveLand?.Invoke(land);
+            }
+            
             _colouring.PaintInside(lands);
             _lands.AddRange(lands);
             KillEnemy();
@@ -103,6 +114,8 @@ namespace SeizureTerritory.Scripts.Character
             {
                 _deathHandler.HandleDeath();
             }
+
+            _buffer.Remove(land);
         }
 
         private void KillEnemy()
@@ -111,6 +124,11 @@ namespace SeizureTerritory.Scripts.Character
             {
                 EventBus.OnEnemyLand?.Invoke(land);
             }
+        }
+        
+        private void RemoveLand(Land land)
+        {
+            _lands.Remove(land);
         }
     }
 }

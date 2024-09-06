@@ -12,6 +12,10 @@ public class Land : MonoBehaviour
         _outline = GetComponent<Outline>();
     }
 
+    public void ActivationOutline() => _outline.enabled = true;
+    
+    public void DeactivationOutline() => _outline.enabled = false;
+
     public void SetMaterial(Material material)
     {
         _texture.material = material;
@@ -27,8 +31,4 @@ public class Land : MonoBehaviour
         
         return true;
     }
-
-    public void ActOutline() => _outline.enabled = true;
-    
-    public void DeactOutline() => _outline.enabled = false;
 }

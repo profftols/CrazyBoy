@@ -15,12 +15,12 @@ public class Colouring
     public void ChangeMaterial(Land land)
     {
         land.SetMaterial(_render.material);
-        land.ActOutline();
+        land.ActivationOutline();
     }
 
-    public bool IsColorNotCorrect(List<Land> buffers)
+    public bool IsColorNotCorrect(List<Land> lands)
     {
-        foreach (var land in buffers)
+        foreach (var land in lands)
         {
             if (land.IsNotDefaultMaterial(_render.material))
             {
