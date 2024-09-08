@@ -14,6 +14,7 @@ public class Map : MonoBehaviour
     private void Awake()
     {
         _lands = new Land[_sizeX, _sizeY];
+        
 
         for (int x = 0; x < _sizeX; x++)
         {

@@ -1,4 +1,6 @@
-﻿namespace SeizureTerritory.Scripts.Character
+﻿using System;
+
+namespace SeizureTerritory.Scripts.Character
 {
     public interface IDeathHandler
     {

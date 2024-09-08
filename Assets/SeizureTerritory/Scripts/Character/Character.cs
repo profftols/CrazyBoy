@@ -12,7 +12,9 @@ public class Character : MonoBehaviour, IDeathHandler
     
     [HideInInspector] public float bonusSpeed;
     [HideInInspector] public bool isInvulnerable;
-
+    
+    public Action<IDeathHandler, Land> OnLand;
+    
     private AreaLand _areaLand;
     
     protected virtual void Start()
@@ -27,6 +29,8 @@ public class Character : MonoBehaviour, IDeathHandler
     {
         if (other.gameObject.TryGetComponent(out Land land))
         {
+            //OnLand?.Invoke(this, land);
+            
             if (_areaLand != null)
             {
                 _areaLand.AddLand(land);

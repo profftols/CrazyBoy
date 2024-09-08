@@ -8,8 +8,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private SpeedBonus _speedBonus;
     [SerializeField] private InvulnerabilityBonus _invulnerabilityBonus;
     [SerializeField] private CameraFollow _camera;
-    [SerializeField] private Transform _path;
-    [SerializeField] private Transform _pointSpawn;
+    [SerializeField] private Transform _pointBonus;
     [SerializeField] private Character[] _players;
     [SerializeField] private List<Material> _materials;
 
@@ -35,18 +34,18 @@ public class Spawner : MonoBehaviour
     {
         _invulnerabilityPool = new BonusPool<Item>(_invulnerabilityBonus, _countBonus);
         _speedPool = new BonusPool<Item>(_speedBonus, _countBonus);
-        _bonusPoints = new List<Transform>(_pointSpawn.childCount);
-        _points = new List<Transform>(_path.childCount);
+        _bonusPoints = new List<Transform>(_pointBonus.childCount);
+        _points = new List<Transform>(transform.childCount);
         _random = new Random();
 
-        for (int i = 0; i < _path.childCount; i++)
+        for (int i = 0; i < transform.childCount; i++)
         {
-            _points.Add(_path.GetChild(i));
+            _points.Add(transform.GetChild(i));
         }
 
-        for (int i = 0; i < _pointSpawn.childCount; i++)
+        for (int i = 0; i < _pointBonus.childCount; i++)
         {
-            _bonusPoints.Add(_pointSpawn.GetChild(i));
+            _bonusPoints.Add(_pointBonus.GetChild(i));
         }
 
         for (int i = 0; i < _players.Length; i++)
@@ -60,13 +59,13 @@ public class Spawner : MonoBehaviour
             }
             else
             {
-                _camera.SetTarget(character.transform);
+                Instantiate(_camera).SetTarget(character.transform);
             }
 
             _points.RemoveAt(count);
         }
 
-        //StartCoroutine(AddBonus());
+        StartCoroutine(AddBonus());
     }
 
     private void InstallColor(Bot bot)
