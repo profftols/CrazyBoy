@@ -1,9 +1,9 @@
 ﻿using System;
+using UnityEngine;
 
-namespace SeizureTerritory.Scripts.Character
+public interface IDeathHandler
 {
-    public interface IDeathHandler
-    {
-        void HandleDeath();
-    }
+    Renderer Render { get; }
+    event Action<IDeathHandler, Land> OnLand;
+    void HandleDeath();
 }

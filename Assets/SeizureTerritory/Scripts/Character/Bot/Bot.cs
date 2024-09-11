@@ -1,26 +1,21 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using SeizureTerritory.Scripts.Behavior;
 using UnityEngine;
 
 public class Bot : Character
 {
-    public Renderer Render { get; private set; }
+    [SerializeField] private List<Material> _materials;
+    
     private StateMachine _stateMachine;
     private ScanState _scanState;
-
-    private void Awake()
-    {
-        Render = GetComponent<Renderer>();
-    }
 
     protected override void Start()
     {
         base.Start();
-        /*_stateMachine = new StateMachine();
+        SetMaterial();
+        _stateMachine = new StateMachine();
         _scanState = new ScanState(this);
-        _stateMachine.Initialize(_scanState);*/
+        _stateMachine.Initialize(_scanState);
     }
     
     private void Update()
@@ -32,7 +27,13 @@ public class Bot : Character
         }
     }
 
-    public void SetMaterial(Material material) => Render.material = material;
-    
+    private void SetMaterial()
+    {
+        Render = GetComponent<Renderer>();
+            var material = _materials[Random.Range(0, _materials.Count - 1)];
+            Render.material = material;
+            _materials.Remove(material);
+    }
+
     public void ChangeState(StateBot newStateBot) => _stateMachine.ChangeState(newStateBot);
 }

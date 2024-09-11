@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SeizureTerritory.Scripts.Character;
 using UnityEngine;
 
@@ -12,24 +11,25 @@ public class Character : MonoBehaviour, IDeathHandler
     
     [HideInInspector] public float bonusSpeed;
     [HideInInspector] public bool isInvulnerable;
-    
-    public Action<IDeathHandler, Land> OnLand;
+
+    public Renderer Render { get; protected set; }
+    public event Action<IDeathHandler, Land> OnLand;
     
     private AreaLand _areaLand;
+    private float _radius = 3f;
+    private float _distance = 1f;
     
     protected virtual void Start()
     {
         ControllerCharacter = GetComponent<CharacterController>();
-        var map = FindObjectOfType<Map>();
-        _areaLand = new AreaLand(map, new Colouring(GetComponent<Renderer>()), transform);
-        _areaLand.SetDeathHandler(this);
+        Spawn();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out Land land))
         {
-            //OnLand?.Invoke(this, land);
+            OnLand?.Invoke(this, land);
             
             if (_areaLand != null)
             {
@@ -51,6 +51,24 @@ public class Character : MonoBehaviour, IDeathHandler
         {
             _areaLand.Clear();
             gameObject.SetActive(false);
+        }
+    }
+
+    public Character GetMe() => this;
+
+    private void Spawn()
+    {
+        Vector3 origin = transform.position;
+        Vector3 direction = transform.forward;
+
+        RaycastHit[] hits = Physics.SphereCastAll(origin, _radius, direction, _distance);
+
+        foreach (var hit in hits)
+        {
+            if (hit.collider.gameObject.TryGetComponent(out Land land))
+            {
+                OnLand?.Invoke(this, land);
+            }
         }
     }
 }

@@ -8,8 +8,6 @@ namespace SeizureTerritory.Scripts.Character
         private readonly Colouring _colouring;
         private readonly Map _map;
         private IDeathHandler _deathHandler;
-        private Dictionary<IDeathHandler, Land> _buffers;
-        private Dictionary<IDeathHandler, Land> _owner;
         private List<Land> _buffer;
         private List<Land> _lands;
 

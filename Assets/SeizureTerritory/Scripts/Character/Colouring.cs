@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Colouring
 {
+    private Character _character;
     private readonly Renderer _render;
     private float _radius = 3f;
     private float _distance = 1f;

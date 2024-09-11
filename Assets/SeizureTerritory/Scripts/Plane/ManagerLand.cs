@@ -1,31 +1,52 @@
 ﻿using System.Collections.Generic;
 using SeizureTerritory.Scripts.Character;
-using UnityEngine;
 
-namespace SeizureTerritory.Scripts.Plane
+public class ManagerLand
 {
-    public class ManagerLand : MonoBehaviour
+    private Map _map;
+    private Dictionary<IDeathHandler, Land> _buffers;
+    private Dictionary<IDeathHandler, Land> _owner;
+
+    public ManagerLand(Map map, List<IDeathHandler> deathHandlers)
     {
-        [SerializeField] private Map _map;
-        
-        private Dictionary<IDeathHandler, Land> _buffers;
-        private Dictionary<IDeathHandler, Land> _owner;
+        _map = map;
+        _buffers = new Dictionary<IDeathHandler, Land>();
+        _owner = new Dictionary<IDeathHandler, Land>();
 
-        private global::Character _character;
-
-        private void OnEnable()
+        foreach (var deathHandler in deathHandlers)
         {
-            _character.OnLand += AddBuffer;
+            deathHandler.OnLand += AddBuffer;
         }
-
-        private void OnDisable()
+    }
+    
+    /*private void AddLand(Land land)
+    {
+        if (_owner.Contains(land) == false)
         {
-            _character.OnLand -= AddBuffer;
+            _buffer.Add(land);
         }
-        
-        private void AddBuffer(IDeathHandler deathHandler, Land land)
+        else if (Calculation.IsValidLands(_buffer))
+        {
+            if (_colouring.IsColorNotCorrect(_buffer))
+            {
+                return;
+            }
+
+            CompleteLand();
+        }
+    }*/
+
+    private void AddBuffer(IDeathHandler deathHandler, Land land)
+    {
+        if (_owner.ContainsValue(land) == false)
         {
             _buffers.Add(deathHandler, land);
         }
+    }
+
+    private void KillCharacter(IDeathHandler deathHandler)
+    {
+        deathHandler.HandleDeath();
+        deathHandler.OnLand -= AddBuffer;
     }
 }

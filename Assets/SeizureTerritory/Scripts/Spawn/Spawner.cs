@@ -52,12 +52,8 @@ public class Spawner : MonoBehaviour
         {
             int count = _random.Next(0, _points.Count - 1);
             var character = Instantiate(_players[i], _points[count].position, Quaternion.identity, null);
-
-            if (character is Bot)
-            {
-                InstallColor(character as Bot);
-            }
-            else
+            
+            if (character is Player)
             {
                 Instantiate(_camera).SetTarget(character.transform);
             }
@@ -66,13 +62,6 @@ public class Spawner : MonoBehaviour
         }
 
         StartCoroutine(AddBonus());
-    }
-
-    private void InstallColor(Bot bot)
-    {
-        var material = _materials[_random.Next(0, _materials.Count - 1)];
-        bot.SetMaterial(material);
-        _materials.Remove(material);
     }
 
     private IEnumerator AddBonus()
