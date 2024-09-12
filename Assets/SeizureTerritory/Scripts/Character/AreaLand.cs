@@ -17,14 +17,8 @@ namespace SeizureTerritory.Scripts.Character
             _buffer = new List<Land>();
             _colouring = colouring;
             _map = map;
-            _lands.AddRange(_colouring.Spawn(transform));
             EventBus.OnEnemyLand += Die;
             EventBus.OnRemoveLand += RemoveLand;
-        }
-        
-        public void SetDeathHandler(IDeathHandler deathHandler)
-        {
-            _deathHandler = deathHandler;
         }
         
         public Vector3 GetMinimumDistance(Vector3 position)

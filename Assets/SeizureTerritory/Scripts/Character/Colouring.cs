@@ -40,27 +40,6 @@ public class Colouring
         }
     }
 
-    public List<Land> Spawn(Transform transform)
-    {
-        var lands = new List<Land>();
-
-        Vector3 origin = transform.position;
-        Vector3 direction = transform.forward;
-
-        RaycastHit[] hits = Physics.SphereCastAll(origin, _radius, direction, _distance);
-
-        foreach (var hit in hits)
-        {
-            if (hit.collider.gameObject.TryGetComponent(out Land land))
-            {
-                land.SetMaterial(_render.material);
-                lands.Add(land);
-            }
-        }
-
-        return lands;
-    }
-
     public bool IsEnemyColor(Land land)
     {
         return land.IsNotDefaultMaterial(_render.material);
