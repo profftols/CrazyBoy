@@ -9,6 +9,7 @@ public class Player : Character
     private void Awake()
     {
         _inputSource = (ICharacterInputSource)_inputSourceBehaviour;
+        Render = GetComponent<Renderer>();
     }
 
     private void Update()

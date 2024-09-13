@@ -99,6 +99,7 @@ public class Map : MonoBehaviour
                 if (lands.Contains(_lands[x, y]) == false && visited.Contains(_lands[x, y]) == false)
                 {
                     temp.Add(_lands[x, y]);
+                    _lands[x, y].ActivationOutline();
                 }
             }
         }

@@ -52,7 +52,7 @@ namespace SeizureTerritory.Scripts.Behavior
 
             var lastPosition = lands[Random.Range(0, lands.Count)].transform.position;
             _directions.Enqueue(new Vector2(lastPosition.x, lastPosition.z));
-            Vector3 homePosition = _bot.GetMinimumDistance(lastPosition);;
+            Vector3 homePosition = _bot.OnMinimumDistanceInvoke();
             _directions.Enqueue(new Vector2(homePosition.x, homePosition.z));
         }
     }

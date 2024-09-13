@@ -5,12 +5,13 @@ using Random = System.Random;
 
 public class Spawner : MonoBehaviour
 {
+    [SerializeField] private Map _map;
     [SerializeField] private SpeedBonus _speedBonus;
     [SerializeField] private InvulnerabilityBonus _invulnerabilityBonus;
     [SerializeField] private CameraFollow _camera;
     [SerializeField] private Transform _pointBonus;
     [SerializeField] private Character[] _players;
-    [SerializeField] private List<Material> _materials;
+    //[SerializeField] private List<Material> _materials;
 
     private List<Transform> _points;
     private List<Transform> _bonusPoints;
@@ -32,6 +33,7 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
+        List<IDeathHandler> characters = new List<IDeathHandler>();
         _invulnerabilityPool = new BonusPool<Item>(_invulnerabilityBonus, _countBonus);
         _speedPool = new BonusPool<Item>(_speedBonus, _countBonus);
         _bonusPoints = new List<Transform>(_pointBonus.childCount);
@@ -52,6 +54,7 @@ public class Spawner : MonoBehaviour
         {
             int count = _random.Next(0, _points.Count - 1);
             var character = Instantiate(_players[i], _points[count].position, Quaternion.identity, null);
+            characters.Add(character);
             
             if (character is Player)
             {
@@ -61,6 +64,8 @@ public class Spawner : MonoBehaviour
             _points.RemoveAt(count);
         }
 
+        var managerLand = new ManagerLand(_map, characters);
+        
         StartCoroutine(AddBonus());
     }
 

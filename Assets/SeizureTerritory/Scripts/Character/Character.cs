@@ -15,14 +15,9 @@ public class Character : MonoBehaviour, IDeathHandler
     public Renderer Render { get; protected set; }
     public event Action<IDeathHandler, Land> OnLand;
     
-    private AreaLand _areaLand;
-    private float _radius = 3f;
-    private float _distance = 1f;
-    
     protected virtual void Start()
     {
         ControllerCharacter = GetComponent<CharacterController>();
-        Spawn();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -30,11 +25,6 @@ public class Character : MonoBehaviour, IDeathHandler
         if (other.gameObject.TryGetComponent(out Land land))
         {
             OnLand?.Invoke(this, land);
-            
-            if (_areaLand != null)
-            {
-                _areaLand.AddLand(land);
-            }
         }
 
         if (other.gameObject.TryGetComponent(out Item item))
@@ -42,33 +32,14 @@ public class Character : MonoBehaviour, IDeathHandler
             item.OnPickUp(this);
         }
     }
-    
-    public Vector3 GetMinimumDistance(Vector3 position) => _areaLand.GetMinimumDistance(position);
 
+    public Transform GetTransform() => transform;
+    
     public void HandleDeath()
     {
         if (isInvulnerable == false)
         {
-            _areaLand.Clear();
             gameObject.SetActive(false);
-        }
-    }
-
-    public Character GetMe() => this;
-
-    private void Spawn()
-    {
-        Vector3 origin = transform.position;
-        Vector3 direction = transform.forward;
-
-        RaycastHit[] hits = Physics.SphereCastAll(origin, _radius, direction, _distance);
-
-        foreach (var hit in hits)
-        {
-            if (hit.collider.gameObject.TryGetComponent(out Land land))
-            {
-                OnLand?.Invoke(this, land);
-            }
         }
     }
 }
