@@ -1,5 +1,4 @@
 ﻿using System;
-using SeizureTerritory.Scripts.Character;
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer), typeof(CharacterController))]
@@ -12,16 +11,24 @@ public class Character : MonoBehaviour, IDeathHandler
     [HideInInspector] public float bonusSpeed;
     [HideInInspector] public bool isInvulnerable;
 
-    public Renderer Render { get; protected set; }
+    public Renderer Render { get; private set; }
     public event Action<IDeathHandler, Land> OnLand;
-    
+    public event Action<IDeathHandler> OnSpawn;
+
+    private void Awake()
+    {
+        Render = GetComponent<Renderer>();
+        ControllerCharacter = GetComponent<CharacterController>();
+    }
+
     protected virtual void Start()
     {
-        ControllerCharacter = GetComponent<CharacterController>();
+        OnSpawn?.Invoke(this);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        
         if (other.gameObject.TryGetComponent(out Land land))
         {
             OnLand?.Invoke(this, land);

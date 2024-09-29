@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace SeizureTerritory.Scripts
 {
@@ -6,7 +7,7 @@ namespace SeizureTerritory.Scripts
     {
         [SerializeField] private GameObject[] _prefabs;
         
-        private void Awake()
+        private void Start()
         {
             foreach (var prefab in _prefabs)
             {

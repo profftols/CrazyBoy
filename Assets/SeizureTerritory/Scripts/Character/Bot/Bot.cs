@@ -16,11 +16,11 @@ public class Bot : Character
 
     protected override void Start()
     {
+        Render.material = _materials[Random.Range(0, _materials.Count - 1)];
         base.Start();
-        SetMaterial();
-        _stateMachine = new StateMachine();
+        /*_stateMachine = new StateMachine();
         _scanState = new ScanState(this);
-        _stateMachine.Initialize(_scanState);
+        _stateMachine.Initialize(_scanState);*/
     }
 
     private void Update()
@@ -33,14 +33,6 @@ public class Bot : Character
     }
 
     public Vector3 OnMinimumDistanceInvoke() => OnMinimumDistance?.Invoke(this) ?? transform.position;
-
-    private void SetMaterial()
-    {
-        Render = GetComponent<Renderer>();
-        var material = _materials[Random.Range(0, _materials.Count - 1)];
-        Render.material = material;
-        _materials.Remove(material);
-    }
 
     public void ChangeState(StateBot newStateBot) => _stateMachine.ChangeState(newStateBot);
 }

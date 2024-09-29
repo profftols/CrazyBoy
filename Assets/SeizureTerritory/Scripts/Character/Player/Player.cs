@@ -6,10 +6,10 @@ public class Player : Character
 
     private ICharacterInputSource _inputSource;
     
-    private void Awake()
+    protected override void Start()
     {
+        base.Start();
         _inputSource = (ICharacterInputSource)_inputSourceBehaviour;
-        Render = GetComponent<Renderer>();
     }
 
     private void Update()
