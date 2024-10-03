@@ -62,10 +62,8 @@ public class Spawner : MonoBehaviour
 
             _points.RemoveAt(count);
         }
-
-        //Исправить эту херню с файнд
-        Map map = FindObjectOfType<Map>();
-        var managerLand = new ManagerLand(map, _characters);
+        
+        var managerLand = new ManagerLand(_characters);
         
         //StartCoroutine(AddBonus());
     }

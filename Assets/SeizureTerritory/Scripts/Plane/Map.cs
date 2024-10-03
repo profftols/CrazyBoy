@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
+    public static Map Instance { get; private set; }
+    public static int Size { get; private set; }
+
     [SerializeField] private Land _land;
     [SerializeField] public int _sizeX;
     [SerializeField] public int _sizeY;
 
     private Renderer _defaultLand;
     private Land[,] _lands;
-    
+
     private void Awake()
     {
-        _lands = new Land[_sizeX, _sizeY];
+        Instance = this;
+        Size = _sizeY * _sizeY;
         
+        _lands = new Land[_sizeX, _sizeY];
 
         for (int x = 0; x < _sizeX; x++)
         {

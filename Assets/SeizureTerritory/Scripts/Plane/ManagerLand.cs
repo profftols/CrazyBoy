@@ -12,9 +12,9 @@ public class ManagerLand
     private float _radius = 3f;
     private float _distance = 1f;
 
-    public ManagerLand(Map map, List<IDeathHandler> characters)
+    public ManagerLand(List<IDeathHandler> characters)
     {
-        _map = map;
+        _map = Map.Instance;
         _buffers = new Dictionary<Land, IDeathHandler>();
         _owner = new Dictionary<Land, IDeathHandler>();
         _deathList = new List<IDeathHandler>();
@@ -107,13 +107,19 @@ public class ManagerLand
     {
         var lands = _buffers.Where(x => x.Value == character).Select(x => x.Key).ToList();
 
+        int score = lands.Count;
+        
         AddOwner(lands, character);
         RemoveBuffers(lands);
 
         lands.AddRange(_owner.Where(x => x.Value == character).Select(x => x.Key).ToList());
 
         var landsInside = _map.TakeLands(lands);
-
+        
+        score += landsInside.Count;
+        
+        EventBus.OnScore?.Invoke(score);
+        
         RemoveBuffers(landsInside);
         AddOwner(landsInside, character);
     }
