@@ -11,6 +11,7 @@ public class Bot : Character
 
     private StateMachine _stateMachine;
     private ScanState _scanState;
+    private readonly float _score = 8f;
 
     public event Func<IDeathHandler, Vector3> OnMinimumDistance;
 
@@ -30,6 +31,11 @@ public class Bot : Character
             (_stateMachine.CurrentStateBot as RunState)?.SetSpeed(Speed, bonusSpeed);
             _stateMachine.CurrentStateBot.Update();
         }
+    }
+
+    private void OnDisable()
+    {
+        EventBus.OnScore.Invoke(_score);
     }
 
     public Vector3 OnMinimumDistanceInvoke() => OnMinimumDistance?.Invoke(this) ?? transform.position;

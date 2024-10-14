@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class ManagerLand
 
     private float _radius = 3f;
     private float _distance = 1f;
+    private readonly int _sizeMap;
 
     public ManagerLand(List<IDeathHandler> characters)
     {
@@ -18,7 +20,8 @@ public class ManagerLand
         _buffers = new Dictionary<Land, IDeathHandler>();
         _owner = new Dictionary<Land, IDeathHandler>();
         _deathList = new List<IDeathHandler>();
-
+        _sizeMap = Map.Size;
+        
         foreach (var character in characters)
         {
             character.OnLand += CheckLand;
@@ -49,6 +52,10 @@ public class ManagerLand
                 {
                     ConquerInside(character);
                 }
+            }
+            else
+            {
+                WriteItDown(land, character);
             }
         }
         else if (_buffers.ContainsKey(land))
@@ -107,7 +114,7 @@ public class ManagerLand
     {
         var lands = _buffers.Where(x => x.Value == character).Select(x => x.Key).ToList();
 
-        int score = lands.Count;
+        float score = lands.Count;
         
         AddOwner(lands, character);
         RemoveBuffers(lands);
@@ -115,10 +122,13 @@ public class ManagerLand
         lands.AddRange(_owner.Where(x => x.Value == character).Select(x => x.Key).ToList());
 
         var landsInside = _map.TakeLands(lands);
-        
-        score += landsInside.Count;
-        
-        EventBus.OnScore?.Invoke(score);
+
+        if (character is Player)
+        {
+            score += landsInside.Count;
+            var value = (float)Math.Round(score / _sizeMap * 100f, 2);
+            EventBus.OnScore?.Invoke(value);
+        }
         
         RemoveBuffers(landsInside);
         AddOwner(landsInside, character);
@@ -128,6 +138,11 @@ public class ManagerLand
     {
         for (int i = 0; i < lands.Count; i++)
         {
+            if (_owner.ContainsKey(lands[i]))
+            {
+                _owner.Remove(lands[i]);
+            }
+            
             _owner.Add(lands[i], character);
             lands[i].DeactivationOutline();
             lands[i].SetMaterial(character.Render.material);
@@ -174,6 +189,12 @@ public class ManagerLand
     private void WriteItDown(Land land, IDeathHandler character)
     {
         _buffers.Add(land, character);
+
+        if (_owner.ContainsKey(land))
+        {
+            _owner.Remove(land);
+        }
+        
         land.SetMaterial(character.Render.material);
         land.ActivationOutline();
     }

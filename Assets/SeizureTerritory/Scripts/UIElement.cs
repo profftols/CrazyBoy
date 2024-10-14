@@ -1,43 +1,54 @@
-using System;
-using System.Globalization;
+using System.Linq;
 using System.Text;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UIElement : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _score;
-
-    private readonly int _sizeMap = Map.Size;
-    private string _text = "Score: ";
+    [SerializeField] private Panel[] _panels;
+    
+    private readonly string _textViewScore = "Score: ";
+    private readonly string _textViewEndScreen = "Your score: ";
     private StringBuilder _sb;
-
-    private void Awake()
-    {
-    }
+    private UIEndGame _endGame;
+    private UIScore _score;
 
     private void OnEnable()
     {
         EventBus.OnScore += AddScore;
+        EventBus.OnGameOver += ShowEndScreen;
     }
     
     private void Start()
     {
         _sb = new StringBuilder();
+        _endGame = _panels.OfType<UIEndGame>().FirstOrDefault();
+        _score = _panels.OfType<UIScore>().FirstOrDefault();
     }
 
     private void OnDisable()
     {
         EventBus.OnScore -= AddScore;
+        EventBus.OnGameOver -= ShowEndScreen;
     }
 
-    private void AddScore(int score)
+    private void ShowEndScreen(float score)
     {
-        var value = (float)score / _sizeMap * 100f;
-        _sb.Append(_text);
-        _sb.Append(value.ToString(CultureInfo.InvariantCulture));
-        
-        _score.text = _sb.ToString();
+        _score.Hide();
+        _endGame.Show();
+        _endGame.TextView.text = CombineString(_textViewEndScreen, score);
+    }
+
+    private void AddScore(float score)
+    {
+        var result = float.Parse(_score.TextView.text.Replace(_textViewScore, ""));
+        _score.TextView.text = CombineString(_textViewScore, score + result);
+    }
+
+    private string CombineString(string text, float score)
+    {
+        _sb.Clear();
+        _sb.Append(text);
+        _sb.Append(score.ToString("F2"));
+        return _sb.ToString();
     }
 }

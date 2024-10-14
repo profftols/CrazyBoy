@@ -1,25 +1,51 @@
+using System.Linq;
 using UnityEngine;
 
-public class MenuActivity : MonoBehaviour, IView
+namespace StartMenu.Scripts.MainMenu
 {
-    [SerializeField] private MainMenuView _main;
-    [SerializeField] private MenuSettings _menu;
-
-    public void ShowAudio()
+    public enum EventType
     {
-        if (_main.isActiveAndEnabled)
-        {
-            _main.gameObject.SetActive(false);
-            _menu.gameObject.SetActive(true);
-        }
+        StartGameMenu,
+        MainMenu,
+        SettingMenu,
+        LeaderboardMenu,
+        SupportMenu,
+        LanguageMenu
     }
 
-    public void ShowMain()
+    public class MenuActivity : MonoBehaviour
     {
-        if (_menu.isActiveAndEnabled)
+        [SerializeField] private MenuActivity[] _windows;
+
+        private IButtonActivity[] ButtonActivities => _windows.Select(w => w.GetComponent<IButtonActivity>()).ToArray();
+    
+        private void OnEnable()
         {
-            _menu.gameObject.SetActive(false);
-            _main.gameObject.SetActive(true);
+            foreach (var window in ButtonActivities)
+            {
+                window.OnClick += OnButtonClick;
+            }
+        }
+    
+        private void OnDisable()
+        {
+            foreach (var window in ButtonActivities)
+            {
+                window.OnClick -= OnButtonClick;
+            }
+        }
+
+        private void OnButtonClick(EventType type)
+        {
+            foreach (var menu in ButtonActivities)
+            {
+                menu.Hide();
+            
+                if (type == menu.Type)
+                {
+                    menu.Show();
+                }
+            }
         }
     }
 }

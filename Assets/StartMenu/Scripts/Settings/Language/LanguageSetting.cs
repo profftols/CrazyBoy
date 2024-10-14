@@ -1,56 +1,68 @@
+using System;
+using StartMenu.Scripts.MainMenu;
 using UnityEngine;
 using UnityEngine.UI;
+using EventType = StartMenu.Scripts.MainMenu.EventType;
 
-public class LanguageSetting : MonoBehaviour
+namespace StartMenu.Scripts.Settings.Language
 {
-    [SerializeField] private Language _language;
-    [SerializeField] private Button _buttonClose;
-    [SerializeField] private Image _eng;
-    [SerializeField] private Image _rus;
-    [SerializeField] private Image _tur;
-
-    private void OnDisable()
+    public class LanguageSetting : MenuActivity, IButtonActivity
     {
-        _language.ChangingLanguage -= ChangeLang;
-        _buttonClose.onClick.RemoveListener(CloseWindow);
-    }
+        [SerializeField] private global::Language _language;
+        [SerializeField] private UnityEngine.UI.Button _buttonClose;
+        [SerializeField] private Image _eng;
+        [SerializeField] private Image _rus;
+        [SerializeField] private Image _tur;
 
-    private void OnEnable()
-    {
-        _language.ChangingLanguage += ChangeLang;
-        _buttonClose.onClick.AddListener(CloseWindow);
-    }
-
-    private void CloseWindow()
-    {
-        gameObject.SetActive(false);
-    }
+        public EventType Type => EventType.LanguageMenu; 
     
-    private void ChangeLang()
-    {
-        if(Language.Instance.CurrentLanguage == _language.English)
+        private void OnEnable()
         {
-            _eng.gameObject.SetActive(true);
-            _rus.gameObject.SetActive(false);
-            _tur.gameObject.SetActive(false);
+            _language.ChangingLanguage += ChangeLang;
+            _buttonClose.onClick.AddListener(MenuSettings);
         }
-        else if(Language.Instance.CurrentLanguage == _language.Russian)
+
+        private void OnDisable()
         {
-            _eng.gameObject.SetActive(false);
-            _rus.gameObject.SetActive(true);
-            _tur.gameObject.SetActive(false);
+            _language.ChangingLanguage -= ChangeLang;
+            _buttonClose.onClick.RemoveListener(MenuSettings);
         }
-        else if(Language.Instance.CurrentLanguage == _language.Turkish)
+
+        public event Action<EventType> OnClick;
+        public void Show() => gameObject.SetActive(true);
+        public void Hide() => gameObject.SetActive(false);
+    
+        private void ChangeLang()
         {
-            _eng.gameObject.SetActive(false);
-            _rus.gameObject.SetActive(false);
-            _tur.gameObject.SetActive(true);
+            if(global::Language.Instance.CurrentLanguage == _language.English)
+            {
+                _eng.gameObject.SetActive(true);
+                _rus.gameObject.SetActive(false);
+                _tur.gameObject.SetActive(false);
+            }
+            else if(global::Language.Instance.CurrentLanguage == _language.Russian)
+            {
+                _eng.gameObject.SetActive(false);
+                _rus.gameObject.SetActive(true);
+                _tur.gameObject.SetActive(false);
+            }
+            else if(global::Language.Instance.CurrentLanguage == _language.Turkish)
+            {
+                _eng.gameObject.SetActive(false);
+                _rus.gameObject.SetActive(false);
+                _tur.gameObject.SetActive(true);
+            }
+            else
+            {
+                _eng.gameObject.SetActive(true);
+                _rus.gameObject.SetActive(false);
+                _tur.gameObject.SetActive(false);
+            }
         }
-        else
+    
+        private void MenuSettings()
         {
-            _eng.gameObject.SetActive(true);
-            _rus.gameObject.SetActive(false);
-            _tur.gameObject.SetActive(false);
+            OnClick?.Invoke(EventType.SettingMenu);
         }
     }
 }

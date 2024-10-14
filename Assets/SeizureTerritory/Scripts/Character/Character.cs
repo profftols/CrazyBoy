@@ -28,7 +28,6 @@ public class Character : MonoBehaviour, IDeathHandler
 
     private void OnTriggerEnter(Collider other)
     {
-        
         if (other.gameObject.TryGetComponent(out Land land))
         {
             OnLand?.Invoke(this, land);

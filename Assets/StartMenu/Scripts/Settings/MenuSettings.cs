@@ -1,32 +1,41 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
+using StartMenu.Scripts.MainMenu;
+using UnityEngine;
+using EventType = StartMenu.Scripts.MainMenu.EventType;
 
-public class MenuSettings : MonoBehaviour
+namespace StartMenu.Scripts.Settings
 {
-    [SerializeField] private Button BackButton;
-    [SerializeField] private Button _buttonLanguage;
-    [SerializeField] private LanguageSetting _languageSetting;
-    [SerializeField] private MenuActivity _activityMenu;
-
-    private void OnDisable()
+    public class MenuSettings : MenuActivity, IButtonActivity
     {
-        BackButton.onClick.RemoveListener(BackMenu);
-        _buttonLanguage.onClick.RemoveListener(OpenWindow);
-    }
+        [SerializeField] private UnityEngine.UI.Button _backButton;
+        [SerializeField] private UnityEngine.UI.Button _buttonLanguage;
 
-    private void OnEnable()
-    {
-        BackButton.onClick.AddListener(BackMenu);
-        _buttonLanguage.onClick.AddListener(OpenWindow);
-    }
+        public EventType Type => EventType.SettingMenu; 
+    
+        private void OnEnable()
+        {
+            _backButton.onClick.AddListener(OnMainMenu);
+            _buttonLanguage.onClick.AddListener(OnLanguageWindow);
+        }
+    
+        private void OnDisable()
+        {
+            _backButton.onClick.RemoveListener(OnMainMenu);
+            _buttonLanguage.onClick.RemoveListener(OnLanguageWindow);
+        }
 
-    private void OpenWindow()
-    {
-        _languageSetting.gameObject.SetActive(true);
-    }
+        public event Action<EventType> OnClick;
+        public void Show() => gameObject.SetActive(true);
+        public void Hide() => gameObject.SetActive(false);
 
-    private void BackMenu()
-    {
-        _activityMenu.ShowMain();
+        private void OnLanguageWindow()
+        {
+            OnClick?.Invoke(EventType.LanguageMenu);
+        }
+    
+        private void OnMainMenu()
+        {
+            OnClick?.Invoke(EventType.MainMenu);
+        }
     }
 }

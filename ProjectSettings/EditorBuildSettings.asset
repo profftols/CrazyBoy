@@ -4,7 +4,16 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/StartMenu.unity
+    guid: 270db0b291655794f967e6b344c0b01b
+  - enabled: 1
+    path: Assets/Scenes/SeizureTerritory.unity
+    guid: ff18f0b610d921f4fb06c4fc9bf66649
+  - enabled: 1
+    path: Assets/Scenes/BossFight.unity
+    guid: 4174fa7a16da75b4089c7fdab45c893f
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 12c8070e61c83ec4db7d72b45c4ab42a, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: e84ca57ae004fdf4a8ae456867fdeccb, type: 2}

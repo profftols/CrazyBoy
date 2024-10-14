@@ -65,18 +65,18 @@ public class Language : MonoBehaviour
     private void ChangeEnglish()
     {
         CurrentLanguage = English;
-        ChangingLanguage.Invoke();
+        ChangingLanguage?.Invoke();
     }
 
     private void ChangeRussian()
     {
         CurrentLanguage = Russian;
-        ChangingLanguage.Invoke();
+        ChangingLanguage?.Invoke();
     }
 
     private void ChangeTurkish()
     {
         CurrentLanguage = Turkish;
-        ChangingLanguage.Invoke();
+        ChangingLanguage?.Invoke();
     }
 }

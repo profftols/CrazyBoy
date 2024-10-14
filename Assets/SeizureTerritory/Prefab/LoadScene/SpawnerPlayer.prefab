@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c077779795e3a1a4faf172547a5102e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _map: {fileID: 2034119044941008908, guid: 4cb28b346d882cf428c76f9ffe21ea4c, type: 3}
   _speedBonus: {fileID: 7276431775849590694, guid: 1277679f2f39d8748b4a7a3e91ab20e0, type: 3}
   _invulnerabilityBonus: {fileID: 7558040617397447583, guid: c3553c11b5328524ca1b13b5a45f4572, type: 3}
   _camera: {fileID: 4694957238086980415, guid: 4992a228e6666b94f8fa29263a26d10a, type: 3}
