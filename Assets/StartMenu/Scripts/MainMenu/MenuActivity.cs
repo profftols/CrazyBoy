@@ -39,12 +39,13 @@ namespace StartMenu.Scripts.MainMenu
         {
             foreach (var menu in ButtonActivities)
             {
-                menu.Hide();
-            
-                if (type == menu.Type)
+                if (type != menu.Type)
                 {
-                    menu.Show();
+                    menu.Hide();
+                    continue;
                 }
+                
+                menu.Show();
             }
         }
     }

@@ -5490,7 +5490,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &969035405
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6543,10 +6543,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2455444051345310661, guid: 7932559f49552a14a805ab347bc9425f, type: 3}
-      propertyPath: _mainButton
-      value: 
-      objectReference: {fileID: 1162362875}
+    - target: {fileID: 2671673325791658603, guid: 7932559f49552a14a805ab347bc9425f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -145
+      objectReference: {fileID: 0}
     - target: {fileID: 4310970948251796847, guid: 7932559f49552a14a805ab347bc9425f, type: 3}
       propertyPath: _language
       value: 
@@ -6561,7 +6561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6398596850360423613, guid: 7932559f49552a14a805ab347bc9425f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8281787760683689126, guid: 7932559f49552a14a805ab347bc9425f, type: 3}
       propertyPath: _language
@@ -6961,17 +6961,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1153328727}
   m_CullTransparentMesh: 0
---- !u!114 &1162362875 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1885672865326611906, guid: 7932559f49552a14a805ab347bc9425f, type: 3}
-  m_PrefabInstance: {fileID: 1087309021}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1178147226
 GameObject:
   m_ObjectHideFlags: 0

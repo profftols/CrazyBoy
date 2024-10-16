@@ -1,14 +1,15 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace StartMenu.Scripts.MainMenu
 {
     public class MenuMain : MenuActivity, IButtonActivity
     {
-        [SerializeField] private UnityEngine.UI.Button _startButton;
-        [SerializeField] private UnityEngine.UI.Button _settingButton;
-        [SerializeField] private UnityEngine.UI.Button _leaderboardButton;
-        [SerializeField] private UnityEngine.UI.Button _supportButton;
+        [SerializeField] private Button _startButton;
+        [SerializeField] private Button _settingButton;
+        [SerializeField] private Button _leaderboardButton;
+        [SerializeField] private Button _supportButton;
     
         public EventType Type => EventType.MainMenu;
     

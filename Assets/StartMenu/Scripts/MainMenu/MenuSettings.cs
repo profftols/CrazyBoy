@@ -1,38 +1,36 @@
 ﻿using System;
-using StartMenu.Scripts.MainMenu;
 using UnityEngine;
-using EventType = StartMenu.Scripts.MainMenu.EventType;
+using UnityEngine.UI;
 
-namespace StartMenu.Scripts.Settings
+namespace StartMenu.Scripts.MainMenu
 {
     public class MenuSettings : MenuActivity, IButtonActivity
     {
-        [SerializeField] private UnityEngine.UI.Button _backButton;
-        [SerializeField] private UnityEngine.UI.Button _buttonLanguage;
+        [SerializeField] private Button _backButton;
+        [SerializeField] private Button _buttonLanguage;
 
-        public EventType Type => EventType.SettingMenu; 
-    
+        public EventType Type => EventType.SettingMenu;
+        public event Action<EventType> OnClick;
+        public void Show() => gameObject.SetActive(true);
+        public void Hide() => gameObject.SetActive(false);
+
         private void OnEnable()
         {
             _backButton.onClick.AddListener(OnMainMenu);
             _buttonLanguage.onClick.AddListener(OnLanguageWindow);
         }
-    
+
         private void OnDisable()
         {
             _backButton.onClick.RemoveListener(OnMainMenu);
             _buttonLanguage.onClick.RemoveListener(OnLanguageWindow);
         }
 
-        public event Action<EventType> OnClick;
-        public void Show() => gameObject.SetActive(true);
-        public void Hide() => gameObject.SetActive(false);
-
         private void OnLanguageWindow()
         {
             OnClick?.Invoke(EventType.LanguageMenu);
         }
-    
+
         private void OnMainMenu()
         {
             OnClick?.Invoke(EventType.MainMenu);
