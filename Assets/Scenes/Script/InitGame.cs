@@ -11,7 +11,7 @@ namespace SeizureTerritory.Scripts
         {
             foreach (var prefab in _prefabs)
             {
-                Instantiate(prefab);
+                var obj = Instantiate(prefab);
             }
         }
     }
