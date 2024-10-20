@@ -6,6 +6,6 @@ public class Defence : Actions
 {
     public override void Action()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Defence");
     }
 }
