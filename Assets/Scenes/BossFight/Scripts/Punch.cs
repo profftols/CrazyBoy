@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Punch : Actions
+namespace Scenes.BossFight.Scripts
 {
-    public override void Action()
+    public class Punch : Actions
     {
-        Debug.Log("Punch");
+        protected override void Action()
+        {
+            steps.Add(this);
+        }
     }
 }

@@ -1,22 +1,25 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Actions : MonoBehaviour
+namespace Scenes.BossFight.Scripts
 {
-    [SerializeField] protected Button _button;
-
-    private void OnEnable()
+    public abstract class Actions : MonoBehaviour
     {
-        _button.onClick.AddListener(Action);
-    }
+        [SerializeField] protected Button button;
+        [SerializeField] protected Steps steps;
+        
+        public float Power { get; private set; } = 10.0f;
 
-    private void OnDisable()
-    {
-        _button.onClick.RemoveListener(Action);
-    }
+        private void OnEnable()
+        {
+            button.onClick.AddListener(Action);
+        }
 
-    public abstract void Action();
+        private void OnDisable()
+        {
+            button.onClick.RemoveListener(Action);
+        }
+
+        protected abstract void Action();
+    }
 }
