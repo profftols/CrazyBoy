@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class Player : Character
+public partial class Player : Character
 {
     [SerializeField] private MonoBehaviour _inputSourceBehaviour;
 

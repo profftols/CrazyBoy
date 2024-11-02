@@ -1,12 +1,16 @@
-using UnityEngine;
+using System.Net;
 
 namespace Scenes.BossFight.Scripts
 {
     public class Defence : Actions
     {
-        protected override void Action()
+        public override void Step()
         {
-            steps.Add(this);
+            Character.TakeDefence();
+        }
+        
+        public Defence(Fighters character, float power) : base(character, power)
+        {
         }
     }
 }

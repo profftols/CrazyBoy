@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +7,8 @@ namespace Scenes.BossFight.Scripts
 {
     public class Steps : MonoBehaviour
     {
+        private const float WaitTime = 3.0f;
+
         [SerializeField] private Button _button;
 
         private Queue<Actions> _actions;
@@ -29,6 +30,12 @@ namespace Scenes.BossFight.Scripts
 
         public void Add(Actions action)
         {
+            if (_actions.Count >= 3)
+            {
+                Play();
+                return;
+            }
+            
             _actions.Enqueue(action);
         }
 
@@ -39,15 +46,14 @@ namespace Scenes.BossFight.Scripts
 
         private IEnumerator LaunchActions()
         {
-            var waiter = new WaitForSecondsRealtime(3);
+            var waiter = new WaitForSecondsRealtime(WaitTime);
 
             while (_actions.Count > 0)
             {
-                Debug.Log("Step" + " " + _actions.Count);
-                _actions.Dequeue();
+                _actions.Dequeue().Step();
                 yield return waiter;
             }
-            
+
             Debug.Log("Defeat");
         }
     }

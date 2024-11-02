@@ -1,25 +1,16 @@
-using UnityEngine;
-using UnityEngine.UI;
-
 namespace Scenes.BossFight.Scripts
 {
-    public abstract class Actions : MonoBehaviour
+    public abstract class Actions
     {
-        [SerializeField] protected Button button;
-        [SerializeField] protected Steps steps;
-        
-        public float Power { get; private set; } = 10.0f;
+        protected readonly Fighters Character;
+        protected readonly float Power;
 
-        private void OnEnable()
+        protected Actions(Fighters character, float power)
         {
-            button.onClick.AddListener(Action);
+            Character = character;
+            Power = power;
         }
 
-        private void OnDisable()
-        {
-            button.onClick.RemoveListener(Action);
-        }
-
-        protected abstract void Action();
+        public abstract void Step();
     }
 }
