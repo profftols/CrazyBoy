@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public partial class Player : Character
+public class Player : Character
 {
     [SerializeField] private MonoBehaviour _inputSourceBehaviour;
 
@@ -29,7 +28,7 @@ public partial class Player : Character
     private void OnDisable()
     {
         EventBus.OnScore -= AddScore;
-        EventBus.OnGameOver?.Invoke(_score);
+        EventBus.OnDefeatGame?.Invoke(_score);
     }
 
     private void AddScore(float score)

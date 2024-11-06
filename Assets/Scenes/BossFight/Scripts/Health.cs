@@ -8,16 +8,17 @@ public class Health : MonoBehaviour
     
     public void TakeDamage(float damage)
     {
+        if (IsDead(damage))
+        {
+            
+            return;
+        }
+        
         _health -= damage;
     }
     
-    public bool IsDead()
+    private bool IsDead(float damage)
     {
-        return _health <= 0.0f;
-    }
-    
-    public void Heal(float heal)
-    {
-        _health += heal;
+        return _health <= damage;
     }
 }

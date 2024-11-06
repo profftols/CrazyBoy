@@ -11,9 +11,9 @@ namespace Scenes.BossFight.Scripts
 
         private Defence _defence;
         private Attack _attack;
+        private readonly float _defenceCoficent = 0.5f;
         private float _power;
         private float _health;
-        private float _defenceCoficent = 0.6f;
         private bool _isDefence;
 
 
@@ -23,12 +23,12 @@ namespace Scenes.BossFight.Scripts
             _attack = new Attack(_enemy, _power);
         }
 
-        public void Defence()
+        public void Defences()
         {
             _steps.Add(_defence);
         }
 
-        public void Attack()
+        public void Attacks()
         {
             _steps.Add(_attack);
         }
@@ -39,7 +39,6 @@ namespace Scenes.BossFight.Scripts
             {
                 _health -= damage * _defenceCoficent;
                 _isDefence = false;
-                return;
             }
             else
             {
@@ -48,7 +47,7 @@ namespace Scenes.BossFight.Scripts
             
             if (_health <= 0)
             {
-                return; //dead;
+                gameObject.SetActive(false);
             }
         }
 

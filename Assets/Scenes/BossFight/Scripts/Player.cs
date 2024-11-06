@@ -5,19 +5,22 @@ namespace Scenes.BossFight.Scripts
 {
     public class Player : Fighters
     {
-        [SerializeField] private Button _attack;
-        [SerializeField] private Button _defense;
+        public Button attack;
+        public Button defense;
+        
+        private Button Attack => attack;
+        private Button Defense => defense;
         
         private void OnEnable()
         {
-            _attack.onClick.AddListener(Attack);
-            _defense.onClick.AddListener(Defence);
+            Attack.onClick.AddListener(Attacks);
+            Defense.onClick.AddListener(Defences);
         }
         
         private void OnDisable()
         {
-            _attack.onClick.RemoveListener(Attack);
-            _defense.onClick.RemoveListener(Defence);
+            Attack.onClick.RemoveListener(Attacks);
+            Defense.onClick.RemoveListener(Defences);
         }
     }
 }
