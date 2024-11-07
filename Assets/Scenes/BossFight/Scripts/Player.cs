@@ -19,6 +19,7 @@ namespace Scenes.BossFight.Scripts
         
         private void OnDisable()
         {
+            EventBus.OnDefeatGame?.Invoke(0);
             Attack.onClick.RemoveListener(Attacks);
             Defense.onClick.RemoveListener(Defences);
         }

@@ -9,6 +9,7 @@ namespace Scenes.BossFight.Scripts
     {
         private const float WaitTime = 3.0f;
 
+        [SerializeField] private Boss _boss;
         [SerializeField] private Button _battle;
         [SerializeField] private Button[] _buttons;
 
@@ -42,6 +43,7 @@ namespace Scenes.BossFight.Scripts
 
         private void Play()
         {
+            _boss.ActEnemy();
             HigeButton();
             StartCoroutine(LaunchActions());
         }
@@ -53,11 +55,9 @@ namespace Scenes.BossFight.Scripts
             while (_actions.Count > 0)
             {
                 _actions.Dequeue().Step();
-                Debug.Log("Step:"+ " " + _actions.Count);
                 yield return waiter;
             }
-
-            Debug.Log("Defeat");
+            
             ShowButton();
         }
         

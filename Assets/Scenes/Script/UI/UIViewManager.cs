@@ -35,6 +35,6 @@ public class UIViewManager : MonoBehaviour
     private void VictoryScreen(float value)
     {
         _victoryGame.Show();
-        _defeatGame.ViewScreen(value);
+        _victoryGame.ViewScreen(value);
     }
 }

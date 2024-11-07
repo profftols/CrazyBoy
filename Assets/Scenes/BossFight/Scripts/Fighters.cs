@@ -23,12 +23,12 @@ namespace Scenes.BossFight.Scripts
             _attack = new Attack(_enemy, _power);
         }
 
-        public void Defences()
+        protected void Defences()
         {
             _steps.Add(_defence);
         }
 
-        public void Attacks()
+        protected void Attacks()
         {
             _steps.Add(_attack);
         }
@@ -49,6 +49,8 @@ namespace Scenes.BossFight.Scripts
             {
                 gameObject.SetActive(false);
             }
+            
+            Debug.Log(_health + " " + gameObject.name);
         }
 
         public void TakeDefence()
